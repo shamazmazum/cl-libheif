@@ -1,30 +1,43 @@
 (defpackage cl-libheif
   (:use #:cl #:cffi)
-  (:export #:cl-libheif-error
-           #:libheif-error
-           #:bps-error
-           #:no-plane-error
+  (:export
+   ;; Conditions
+   #:cl-libheif-error
+   #:libheif-error
+   #:bps-error
+   #:no-plane-error
 
-           #:init-parameters
-           #:+default-init-parameters+
-           #:with-libheif
+   ;; libheif (de)initialization
+   #:init-parameters
+   #:+default-init-parameters+
+   #:with-libheif
 
-           #:context
-           #:with-context
-           #:read-image!
-           #:image-handle
-           #:with-primary-image-handle
-           #:image-handle-width
-           #:image-handle-height
-           #:colorspace
-           #:chroma
-           #:decoding-options
-           #:+default-decoding-options+
-           #:image
-           #:with-decode-image
-           #:channel
-           #:image-height
-           #:image-width
-           #:image-bits-per-pixel
-           #:image-bits-per-pixel-range
-           #:image-plane))
+   ;; Context
+   #:context
+   #:with-context
+   #:read-image!
+
+   ;; Image handle
+   #:image-handle
+   #:with-primary-image-handle
+   #:image-handle-width
+   #:image-handle-height
+   #:image-handle-preferred-decoding-colorspace
+
+   ;; Colorspaces
+   #:colorspace
+   #:chroma
+
+   ;; Decoder
+   #:decoding-options
+   #:+default-decoding-options+
+   #:with-decode-image
+
+   ;; Images
+   #:image
+   #:channel
+   #:image-height
+   #:image-width
+   #:image-bits-per-pixel
+   #:image-bits-per-pixel-range
+   #:image-plane))

@@ -47,6 +47,28 @@
   (%image-handle-height
    (image-handle-obj handle)))
 
+
+(defcfun (%image-handle-preferred-decoding-colorspace
+          "heif_image_handle_get_preferred_decoding_colorspace")
+    (:struct heif-error)
+  (handle     :pointer)
+  (colorspace (:pointer heif-colorspace))
+  (chroma     (:pointer heif-chroma)))
+
+(serapeum:-> image-handle-preferred-decoding-colorspace
+             (image-handle)
+             (values colorspace chroma &optional))
+(defun image-handle-preferred-decoding-colorspace (handle)
+  "Get the colorspace and chroma parameters which are preferred when
+decoding the image."
+  (with-foreign-objects ((colorspace-ptr 'heif-colorspace)
+                         (chroma-ptr     'heif-chroma))
+    (let ((result (%image-handle-preferred-decoding-colorspace
+                   (image-handle-obj handle) colorspace-ptr chroma-ptr)))
+      (analyse-error result))
+    (values (mem-ref colorspace-ptr 'heif-colorspace)
+            (mem-ref chroma-ptr     'heif-chroma))))
+
 (defmacro with-primary-image-handle ((handle context) &body body)
   "Gets the primary image handle from the context and executes body in
 scope of that handle. This macro ensures that the handle is released
