@@ -5,6 +5,10 @@
            #:bps-error
            #:no-plane-error
 
+           #:init-parameters
+           #:+default-init-parameters+
+           #:with-libheif
+
            #:context
            #:with-context
            #:read-image!

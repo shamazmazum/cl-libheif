@@ -7,4 +7,11 @@
     :serial t
     :pathname "src"
     :components ((:file "package")
-                 (:file "libheif")))
+                 (:file "library")
+                 (:file "conditions")
+                 (:file "enums")
+                 (:file "context")
+                 (:file "reading")
+                 (:file "image-handle")
+                 (:file "image")
+                 (:file "decoding")))
