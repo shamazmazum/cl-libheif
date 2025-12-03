@@ -53,4 +53,11 @@
    #:get-plane-data
    #:with-image
    #:image-add-plane!
-   #:set-plane-data!))
+   #:set-plane-data!
+
+   ;; Metadata
+   #:metadata-ref
+   #:metadata-ref-id
+   #:metadata-ref-size
+   #:get-metadata-refs
+   #:get-metadata))

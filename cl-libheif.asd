@@ -15,4 +15,5 @@
                  (:file "image-handle")
                  (:file "image")
                  (:file "decoding")
-                 (:file "encoding")))
+                 (:file "encoding")
+                 (:file "exif")))
