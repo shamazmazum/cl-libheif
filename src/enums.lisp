@@ -48,3 +48,30 @@
     :r :g :b
     :alpha :interleaved
     :filter-array :depth :disparity))
+
+(defcenum heif-compression-format
+  :undefined
+  :hevc
+  :avc
+  :jpeg
+  :av1
+  :vvc
+  :evc
+  :jpeg2000
+  :uncompressed
+  :mask
+  :htj2k)
+
+(deftype compression-format ()
+  '(member
+    :undefined
+    :hevc
+    :avc
+    :jpeg
+    :av1
+    :vvc
+    :evc
+    :jpeg2000
+    :uncompressed
+    :mask
+    :htj2k))

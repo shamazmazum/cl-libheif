@@ -42,3 +42,18 @@
    (if (typep source '(or pathname string))
        #'read-from-file! #'read-from-octets!)
    context source))
+
+;; Image writing
+;; TODO: implement writing to sequence
+
+(defcfun (%context-write-to-file! "heif_context_write_to_file") (:struct heif-error)
+  (context  :pointer)
+  (filename :string))
+
+(serapeum:-> context-write-to-file! (context (or pathname string)) (values &optional))
+(defun context-write-to-file! (context filename)
+  (let ((result (%context-write-to-file!
+                 (context-obj context)
+                 (uiop:native-namestring filename))))
+    (analyse-error result))
+  (values))

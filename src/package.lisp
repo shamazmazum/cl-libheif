@@ -16,6 +16,7 @@
    #:context
    #:with-context
    #:read-image!
+   #:context-write-to-file!
 
    ;; Image handle
    #:image-handle
@@ -32,6 +33,14 @@
    #:decoding-options
    #:+default-decoding-options+
    #:with-decode-image
+
+   ;; Encoder
+   #:encoding-options
+   #:+default-encoding-options+
+   #:compression-format
+   #:with-encoder-for-format
+   #:encoder-set-lossy-quality!
+   #:context-encode-image
 
    ;; Images
    #:image
