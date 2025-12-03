@@ -6,6 +6,7 @@
    #:libheif-error
    #:bps-error
    #:no-plane-error
+   #:dimensions-mismatch
 
    ;; libheif (de)initialization
    #:init-parameters
@@ -49,4 +50,7 @@
    #:image-width
    #:image-bits-per-pixel
    #:image-bits-per-pixel-range
-   #:image-plane))
+   #:get-plane-data
+   #:with-image
+   #:image-add-plane!
+   #:set-plane-data!))

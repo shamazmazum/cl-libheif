@@ -40,6 +40,15 @@
      (format s "No such plane in the image")))
   (:documentation "Signalled by the wrapper when there is no requested plane in the image"))
 
+(define-condition dimensions-mismatch (cl-libheif-error)
+  ((dims :initarg :dims
+         :reader  mismatched-dims))
+  (:report
+   (lambda (c s)
+     (format s "No plane with dimensionality ~a"
+             (mismatched-dims c))))
+  (:documentation "Signalled when trying to set data of the wrong dimensionality to a plane"))
+
 ;; Internal error struct
 (defcstruct (heif-error :class heif-error-type)
   (code    :int)
