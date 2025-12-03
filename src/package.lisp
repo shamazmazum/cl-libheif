@@ -1,5 +1,6 @@
 (defpackage cl-libheif
   (:use #:cl #:cffi)
+  (:local-nicknames (#:tos #:trivial-octet-streams))
   (:export
    ;; Conditions
    #:cl-libheif-error
@@ -18,6 +19,7 @@
    #:with-context
    #:read-image!
    #:context-write-to-file!
+   #:context-write-to-octets
 
    ;; Image handle
    #:image-handle
