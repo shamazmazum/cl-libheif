@@ -43,11 +43,20 @@
    #:with-decode-image
 
    ;; Encoder
+   #:encoder-descriptor
+   #:encoder-descriptors
+   #:encoder-descriptor-name
+   #:encoder-descriptor-id-name
+   #:encoder-descriptor-compression-format
+   #:encoder-descriptor-supports-lossy-compression-p
+   #:encoder-descriptor-supports-lossless-compression-p
    #:encoding-options
    #:+default-encoding-options+
    #:compression-format
+   #:with-encoder
    #:with-encoder-for-format
    #:encoder-set-lossy-quality!
+   #:encoder-set-lossless!
    #:context-encode-image
 
    ;; Images
