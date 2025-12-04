@@ -22,6 +22,8 @@
    #:context-write-to-octets
    #:context-top-level-image-ids
    #:context-primary-image-id
+   #:context-set-maximum-image-size-limit!
+   #:context-set-max-decoding-threads!
 
    ;; Image handle
    #:image-handle

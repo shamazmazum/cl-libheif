@@ -91,3 +91,27 @@ control leaves BODY."
                    (context-obj context) id-ptr)))
       (analyse-error result))
     (mem-ref id-ptr :uint32)))
+
+(defcfun (%context-set-maximum-image-size-limit! "heif_context_set_maximum_image_size_limit")
+    :void
+  (context :pointer)
+  (width   :int))
+
+(serapeum:-> context-set-maximum-image-size-limit! (context (integer 0)) (values &optional))
+(defun context-set-maximum-image-size-limit! (context width)
+  "Set the maximum image size security limit. This function will set
+the maximum image area (number of pixels) to maximum_width ^ 2."
+  (%context-set-maximum-image-size-limit! (context-obj context) width)
+  (values))
+
+(defcfun (%context-set-max-decoding-threads! "heif_context_set_max_decoding_threads") :void
+  (context :pointer)
+  (threads :int))
+
+(serapeum:-> context-set-max-decoding-threads! (context (integer 0)) (values &optional))
+(defun context-set-max-decoding-threads! (context nthreads)
+  "Set the maximal number of threads used by libheif. Setting this to
+0 means decoding in the main thread, while 1 means that a separate
+thread dedicated to decoding is created."
+  (%context-set-max-decoding-threads! (context-obj context) nthreads)
+  (values))
