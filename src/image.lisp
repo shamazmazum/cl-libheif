@@ -98,7 +98,7 @@
   (chroma     heif-chroma)
   (image      :pointer))
 
-(serapeum:-> image-create ((unsigned-byte 31) (unsigned-byte 31) colorspace chroma)
+(serapeum:-> image-create ((integer 0) (integer 0) colorspace chroma)
              (values image &optional))
 (defun image-create (width height colorspace chroma)
   (with-foreign-object (image-ptr :pointer)
@@ -121,7 +121,7 @@ image is released when the control leaves BODY."
   (bit-depth :int))
 
 (serapeum:-> image-add-plane!
-             (image channel (unsigned-byte 31) (unsigned-byte 31) (unsigned-byte 31))
+             (image channel (integer 0) (integer 0) (integer 0))
              (values &optional))
 (defun image-add-plane! (image channel width height bit-depth)
   (let ((result (%image-add-plane!
