@@ -67,10 +67,10 @@
    #:image-width
    #:image-bits-per-pixel
    #:image-bits-per-pixel-range
-   #:get-plane-data ;; Add IMAGE-
+   #:image-plane-data
    #:with-image
    #:image-add-plane!
-   #:set-plane-data!
+   #:image-set-plane-data!
 
    ;; Metadata
    #:metadata-ref

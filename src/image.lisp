@@ -65,9 +65,9 @@
   (channel heif-channel)
   (stride  (:pointer :int)))
 
-(serapeum:-> get-plane-data (image channel)
+(serapeum:-> image-plane-data (image channel)
              (values (simple-array (unsigned-byte 8) 3) &optional))
-(defun get-plane-data (image channel)
+(defun image-plane-data (image channel)
   (declare (optimize (speed 3)))
   (with-foreign-object (stride-ptr :int)
     (let ((ptr (%image-plane-readonly (image-obj image) channel stride-ptr)))
@@ -135,9 +135,9 @@ image is released when the control leaves BODY."
   (channel heif-channel)
   (stride  (:pointer :int)))
 
-(serapeum:-> set-plane-data! (image channel (simple-array (unsigned-byte 8) 3))
+(serapeum:-> image-set-plane-data! (image channel (simple-array (unsigned-byte 8) 3))
              (values &optional))
-(defun set-plane-data! (image channel data)
+(defun image-set-plane-data! (image channel data)
   (declare (optimize (speed 3)))
   (let ((rows   (array-dimension data 0))
         (cols   (array-dimension data 1))
