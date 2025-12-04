@@ -1,5 +1,21 @@
 (in-package :cl-libheif)
 
+;; :boolean type is broken for some reason
+
+(defmethod translate-into-foreign-memory (value (type cffi::foreign-type-wrapper) ptr)
+  (translate-into-foreign-memory
+   (funcall (cffi::wrapper-to-c type) value)
+   (cffi::actual-type type) ptr))
+
+(defun bool-c-to-lisp (value)
+  (not (zerop value)))
+
+(defun bool-lisp-to-c (value)
+  (if value 1 0))
+
+(defctype heif-boolean (:wrapper :int :from-c bool-c-to-lisp
+                                 :to-c bool-lisp-to-c))
+
 (defwrapper encoding-options)
 (defparameter +default-encoding-options+
   (encoding-options (null-pointer))
@@ -54,7 +70,7 @@ BODY."
 (defcfun (%encoder-set-lossless! "heif_encoder_set_lossless")
     (:struct heif-error)
   (encoder :pointer)
-  (enable  :bool))
+  (enable  heif-boolean))
 
 (serapeum:-> encoder-set-lossless! (encoder boolean) (values &optional))
 (defun encoder-set-lossless! (encoder enablep)
@@ -130,7 +146,7 @@ BODY."
 
 (defcfun (%encoder-descriptor-supports-lossy-compression-p
           "heif_encoder_descriptor_supports_lossy_compression")
-    :bool
+    :boolean
   (descriptor :pointer))
 
 (serapeum:-> encoder-descriptor-supports-lossy-compression-p
@@ -142,7 +158,7 @@ BODY."
 
 (defcfun (%encoder-descriptor-supports-lossless-compression-p
           "heif_encoder_descriptor_supports_lossless_compression")
-    :bool
+    :boolean
   (descriptor :pointer))
 
 (serapeum:-> encoder-descriptor-supports-lossless-compression-p
