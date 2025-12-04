@@ -1,47 +1,38 @@
 (in-package :cl-libheif)
 
 ;; Image reading
-(defcfun (%read-from-file! "heif_context_read_from_file") (:struct heif-error)
+(defcfun (%context-read-from-file! "heif_context_read_from_file") (:struct heif-error)
   (context  :pointer)
   (filename :string)
   (options  :pointer))
 
-(serapeum:-> read-from-file! (context (or string pathname)) (values &optional))
-(defun read-from-file! (context filename)
-  (let ((result (%read-from-file!
+(serapeum:-> context-read-from-file! (context (or string pathname)) (values &optional))
+(defun context-read-from-file! (context filename)
+  "Read an image from a file."
+  (let ((result (%context-read-from-file!
                  (context-obj context)
                  (namestring (truename filename))
                  (null-pointer))))
     (analyse-error result))
   (values))
 
-(defcfun (%read-from-octets! "heif_context_read_from_memory") (:struct heif-error)
+(defcfun (%context-read-from-octets! "heif_context_read_from_memory") (:struct heif-error)
   (context  :pointer)
   (memory   :pointer)
   (size     :size)
   (options  :pointer))
 
-(serapeum:-> read-from-octets! (context (simple-array (unsigned-byte 8) (*)))
+(serapeum:-> context-read-from-octets! (context (simple-array (unsigned-byte 8) (*)))
              (values &optional))
-(defun read-from-octets! (context array)
+(defun context-read-from-octets! (context array)
+  "Read an image from a simple array of octets (of type (unsigned-byte 8))."
   (with-pointer-to-vector-data (ptr array)
-    (let ((result (%read-from-octets!
+    (let ((result (%context-read-from-octets!
                    (context-obj context)
                    ptr (length array)
                    (null-pointer))))
       (analyse-error result)))
   (values))
-
-(serapeum:-> read-image! (context (or (simple-array (unsigned-byte 8) (*))
-                                      pathname string))
-             (values &optional))
-(defun read-image! (context source)
-  "Read an image from a file or from a simple array of octets"
-  (declare (optimize (speed 3)))
-  (funcall
-   (if (typep source '(or pathname string))
-       #'read-from-file! #'read-from-octets!)
-   context source))
 
 ;; Image writing
 

@@ -17,7 +17,8 @@
    ;; Context
    #:context
    #:with-context
-   #:read-image!
+   #:context-read-from-file!
+   #:context-read-from-octets!
    #:context-write-to-file!
    #:context-write-to-octets
    #:context-top-level-image-ids
