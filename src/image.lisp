@@ -80,8 +80,8 @@
                                       (image-bits-per-pixel image channel)))
                                :element-type '(unsigned-byte 8))))
         (loop for row below (array-dimension plane 0)
-              for mem-offset   = (* row stride)
-              for plane-offset = (array-row-major-index plane row 0 0) do
+              for mem-offset fixnum = (* row stride)
+              for plane-offset      = (array-row-major-index plane row 0 0) do
               (loop for idx below (* (array-dimension plane 1)
                                      (array-dimension plane 2))
                     do
@@ -138,6 +138,7 @@ image is released when the control leaves BODY."
 (serapeum:-> set-plane-data! (image channel (simple-array (unsigned-byte 8) 3))
              (values &optional))
 (defun set-plane-data! (image channel data)
+  (declare (optimize (speed 3)))
   (let ((rows   (array-dimension data 0))
         (cols   (array-dimension data 1))
         (octets (array-dimension data 2)))
@@ -154,8 +155,8 @@ image is released when the control leaves BODY."
         (error 'no-plane-error))
       (let ((stride (mem-ref stride-ptr :int)))
         (loop for r below rows
-              for array-offset = (array-row-major-index data r 0 0)
-              for mem-offset   = (* stride r) do
+              for array-offset        = (array-row-major-index data r 0 0)
+              for mem-offset fixnum   = (* stride r) do
               (loop for i below (* cols octets) do
                     (setf (mem-aref plane :uint8 (+ mem-offset i))
                           (row-major-aref data (+ array-offset i)))))))))
