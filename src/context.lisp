@@ -2,31 +2,6 @@
 
 (in-package :cl-libheif)
 
-(defwrapper init-parameters)
-
-;; Currently no parameters are supported
-(defparameter +default-init-parameters+
-  (init-parameters (null-pointer)))
-
-(defcfun (%init "heif_init") (:struct heif-error)
-  (parameters :pointer))
-
-(serapeum:-> init (init-parameters) (values &optional))
-(defun init (parameters)
-  (let ((result (%init (init-parameters-obj parameters))))
-    (analyse-error result))
-  (values))
-
-(defcfun (deinit "heif_deinit") :void)
-
-(defmacro with-libheif ((parameters) &body body)
-  "Execute BODY with libheif being initialized. It is deinitialized
-when the control leaves BODY."
-  `(progn
-     (init ,parameters)
-     (unwind-protect (progn ,@body)
-       (deinit))))
-
 (defwrapper context)
 
 (defcfun (%alloc-context "heif_context_alloc") :pointer)
@@ -67,7 +42,8 @@ control leaves BODY."
 (serapeum:-> context-top-level-image-ids (context &optional (integer 0))
              (values list &optional))
 (defun context-top-level-image-ids (context &optional (max-ids 0))
-  "Return a list of toplevel image ids. If MAX-IDS > 0, return no more than MAX-IDS."
+  "Return a list of toplevel image ids. If @c(max-ids) > 0, return no
+more than @c(max-ids)."
   (let* ((n (%context-number-of-top-level-images
              (context-obj context)))
          (n (if (zerop max-ids) n (min n max-ids))))
@@ -86,6 +62,7 @@ control leaves BODY."
 
 (serapeum:-> context-primary-image-id (context) (values integer &optional))
 (defun context-primary-image-id (context)
+  "Get ID of a primary toplevel image."
   (with-foreign-object (id-ptr :uint32)
     (let ((result (%context-primary-image-id
                    (context-obj context) id-ptr)))
@@ -100,7 +77,7 @@ control leaves BODY."
 (serapeum:-> context-set-maximum-image-size-limit! (context (integer 0)) (values &optional))
 (defun context-set-maximum-image-size-limit! (context width)
   "Set the maximum image size security limit. This function will set
-the maximum image area (number of pixels) to maximum_width ^ 2."
+the maximum image area (number of pixels) to @c((expt width 2))."
   (%context-set-maximum-image-size-limit! (context-obj context) width)
   (values))
 

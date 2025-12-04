@@ -25,7 +25,7 @@
 (serapeum:-> context-read-from-octets! (context (simple-array (unsigned-byte 8) (*)))
              (values &optional))
 (defun context-read-from-octets! (context array)
-  "Read an image from a simple array of octets (of type (unsigned-byte 8))."
+  "Read an image from a simple array of octets (of type @c((unsigned-byte 8)))."
   (with-pointer-to-vector-data (ptr array)
     (let ((result (%context-read-from-octets!
                    (context-obj context)
@@ -42,6 +42,7 @@
 
 (serapeum:-> context-write-to-file! (context (or pathname string)) (values &optional))
 (defun context-write-to-file! (context filename)
+  "Write context to a file."
   (let ((result (%context-write-to-file!
                  (context-obj context)
                  (uiop:native-namestring filename))))
@@ -82,6 +83,7 @@
   (serapeum:-> context-write-to-octets (context)
                (values (simple-array (unsigned-byte 8) (*)) &optional))
   (defun context-write-to-octets (context)
+    "Write context to a simple array of octets."
     (let ((*current-output-stream* (tos:make-octet-output-stream)))
       (with-foreign-object (writer-ptr '(:struct heif-writer))
         (with-foreign-slots ((api-version write) writer-ptr (:struct heif-writer))

@@ -70,9 +70,9 @@ decoding the image."
             (mem-ref chroma-ptr     'heif-chroma))))
 
 (defmacro with-primary-image-handle ((handle context) &body body)
-  "Gets the primary image handle from the context and executes body in
-scope of that handle. This macro ensures that the handle is released
-when the control leaves BODY."
+  "Get the primary image handle from the context and executes @c(body)
+in scope of that handle. This macro ensures that the handle is
+released when the control leaves @c(body)."
   `(let ((,handle (get-primary-image-handle ,context)))
      (unwind-protect
           (progn ,@body)
@@ -91,8 +91,8 @@ when the control leaves BODY."
     (image-handle (mem-ref handle-ptr :pointer))))
 
 (defmacro with-image-handle ((handle context id) &body body)
-  "Get an image handle by id and execute BODY in its scope. Make sure
-the handle is released when the control leaves BODY"
+  "Get an image handle by id and execute @c(body) in its scope. Make
+sure the handle is released when the control leaves @c(body)."
   `(let ((,handle (context-image-handle ,context ,id)))
      (unwind-protect (progn ,@body)
        (release-image-handle ,handle))))

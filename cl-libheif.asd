@@ -7,8 +7,8 @@
     :serial t
     :pathname "src"
     :components ((:file "package")
-                 (:file "library")
                  (:file "conditions")
+                 (:file "library")
                  (:file "enums")
                  (:file "context")
                  (:file "io")

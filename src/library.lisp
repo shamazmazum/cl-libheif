@@ -9,3 +9,29 @@
   "Make a new type for a pointer"
   `(serapeum:defconstructor ,name
      (obj t)))
+
+(defwrapper init-parameters)
+
+;; Currently no parameters are supported
+(defparameter +default-init-parameters+
+  (init-parameters (null-pointer))
+  "Default libheif init parameters.")
+
+(defcfun (%init "heif_init") (:struct heif-error)
+  (parameters :pointer))
+
+(serapeum:-> init (init-parameters) (values &optional))
+(defun init (parameters)
+  (let ((result (%init (init-parameters-obj parameters))))
+    (analyse-error result))
+  (values))
+
+(defcfun (deinit "heif_deinit") :void)
+
+(defmacro with-libheif ((parameters) &body body)
+  "Execute BODY with libheif being initialized. It is deinitialized
+when the control leaves BODY."
+  `(progn
+     (init ,parameters)
+     (unwind-protect (progn ,@body)
+       (deinit))))
