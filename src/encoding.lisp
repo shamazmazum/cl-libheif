@@ -78,7 +78,7 @@ BODY."
     (analyse-error result))
   (values))
 
-(defcfun (%context-encode-image "heif_context_encode_image")
+(defcfun (%context-encode-image! "heif_context_encode_image")
     (:struct heif-error)
   (context :pointer)
   (image   :pointer)
@@ -86,9 +86,11 @@ BODY."
   (options :pointer)
   (handle  :pointer))
 
-(serapeum:-> context-encode-image (context image encoder encoding-options) (values &optional))
-(defun context-encode-image (context image encoder options)
-  (let ((result (%context-encode-image
+(serapeum:-> context-encode-image!
+             (context image encoder encoding-options)
+             (values &optional))
+(defun context-encode-image! (context image encoder options)
+  (let ((result (%context-encode-image!
                  (context-obj          context)
                  (image-obj            image)
                  (encoder-obj          encoder)

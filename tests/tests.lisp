@@ -65,7 +65,7 @@
         (with-context (context)
           (with-encoder-for-format (encoder context :hevc)
             (encoder-set-lossy-quality! encoder 95)
-            (context-encode-image
+            (context-encode-image!
              context image encoder
              +default-encoding-options+))
           (values (context-write-to-octets context) data))))))

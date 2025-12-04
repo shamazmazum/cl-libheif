@@ -58,7 +58,7 @@
    #:with-encoder-for-format
    #:encoder-set-lossy-quality!
    #:encoder-set-lossless!
-   #:context-encode-image ;; Add !
+   #:context-encode-image!
 
    ;; Images
    #:image
