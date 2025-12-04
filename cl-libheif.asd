@@ -16,4 +16,20 @@
                  (:file "image")
                  (:file "decoding")
                  (:file "encoding")
-                 (:file "exif")))
+                 (:file "exif"))
+    :in-order-to ((test-op (load-op "cl-libheif/tests")))
+    :perform (test-op (op system)
+                      (declare (ignore op system))
+                      (funcall
+                       (symbol-function
+                        (intern (symbol-name '#:run-tests)
+                                (find-package :cl-libheif/tests))))))
+
+(defsystem :cl-libheif/tests
+  :version "0.1"
+  :author "Vasily Postnicov <shamaz.mazum@gmail.com>"
+  :licence "2-clause BSD"
+  :pathname "tests"
+  :components ((:file "package")
+               (:file "tests" :depends-on ("package")))
+  :depends-on (:cl-libheif :fiveam :cl-value-noise :float-features))

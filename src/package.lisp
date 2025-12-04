@@ -58,7 +58,7 @@
    #:with-encoder-for-format
    #:encoder-set-lossy-quality!
    #:encoder-set-lossless!
-   #:context-encode-image
+   #:context-encode-image ;; Add !
 
    ;; Images
    #:image
@@ -67,7 +67,7 @@
    #:image-width
    #:image-bits-per-pixel
    #:image-bits-per-pixel-range
-   #:get-plane-data
+   #:get-plane-data ;; Add IMAGE-
    #:with-image
    #:image-add-plane!
    #:set-plane-data!
