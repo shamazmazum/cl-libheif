@@ -20,10 +20,13 @@
    #:read-image!
    #:context-write-to-file!
    #:context-write-to-octets
+   #:context-top-level-image-ids
+   #:context-primary-image-id
 
    ;; Image handle
    #:image-handle
    #:with-primary-image-handle
+   #:with-image-handle
    #:image-handle-width
    #:image-handle-height
    #:image-handle-preferred-decoding-colorspace

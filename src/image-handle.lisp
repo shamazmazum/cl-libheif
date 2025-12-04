@@ -77,3 +77,22 @@ when the control leaves BODY."
      (unwind-protect
           (progn ,@body)
        (release-image-handle ,handle))))
+
+(defcfun (%context-image-handle "heif_context_get_image_handle") (:struct heif-error)
+  (context :pointer)
+  (id      :int)
+  (handle  :pointer))
+
+(serapeum:-> context-image-handle (context integer) (values image-handle &optional))
+(defun context-image-handle (context id)
+  (with-foreign-object (handle-ptr :pointer)
+    (let ((result (%context-image-handle (context-obj context) id handle-ptr)))
+      (analyse-error result))
+    (image-handle (mem-ref handle-ptr :pointer))))
+
+(defmacro with-image-handle ((handle context id) &body body)
+  "Get an image handle by id and execute BODY in its scope. Make sure
+the handle is released when the control leaves BODY"
+  `(let ((,handle (context-image-handle ,context ,id)))
+     (unwind-protect (progn ,@body)
+       (release-image-handle ,handle))))

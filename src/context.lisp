@@ -53,3 +53,41 @@ control leaves BODY."
      (unwind-protect
           (progn ,@body)
        (free-context ,context))))
+
+(defcfun (%context-number-of-top-level-images "heif_context_get_number_of_top_level_images")
+    :int
+  (context :pointer))
+
+(defcfun (%context-top-level-image-ids "heif_context_get_list_of_top_level_image_IDs")
+    :int
+  (context :pointer)
+  (ids     (:pointer :uint32))
+  (count   :int))
+
+(serapeum:-> context-top-level-image-ids (context &optional (integer 0))
+             (values list &optional))
+(defun context-top-level-image-ids (context &optional (max-ids 0))
+  "Return a list of toplevel image ids. If MAX-IDS > 0, return no more than MAX-IDS."
+  (let* ((n (%context-number-of-top-level-images
+             (context-obj context)))
+         (n (if (zerop max-ids) n (min n max-ids))))
+    (with-foreign-object (ids-ptr :uint32 n)
+      (let ((nreceived (%context-top-level-image-ids
+                        (context-obj context)
+                        ids-ptr n)))
+        (assert (= n nreceived)))
+      (loop for i below n collect
+            (mem-aref ids-ptr :uint32 i)))))
+
+(defcfun (%context-primary-image-id "heif_context_get_primary_image_ID")
+    (:struct heif-error)
+  (context :pointer)
+  (id      (:pointer :uint32)))
+
+(serapeum:-> context-primary-image-id (context) (values integer &optional))
+(defun context-primary-image-id (context)
+  (with-foreign-object (id-ptr :uint32)
+    (let ((result (%context-primary-image-id
+                   (context-obj context) id-ptr)))
+      (analyse-error result))
+    (mem-ref id-ptr :uint32)))
