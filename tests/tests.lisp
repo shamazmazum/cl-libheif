@@ -49,37 +49,35 @@
     result))
 
 (serapeum:-> encode-image
-             ((integer 0) (integer 0) &optional (single-float 0.0))
+             ((integer 0) (integer 0) compression-format &optional (single-float 0.0))
              (values (simple-array (unsigned-byte 8) (*))
                      (simple-array (unsigned-byte 8) (* * 3))
                      &optional))
-(defun encode-image (height width &optional (mul 10.0))
+(defun encode-image (height width format &optional (mul 10.0))
   (let* ((r (create-noise height width (random 100000) mul))
          (g (create-noise height width (random 100000) mul))
          (b (create-noise height width (random 100000) mul))
          (data (interleave-planes r g b)))
-    (with-libheif (+default-init-parameters+)
-      (with-image (image width height :rgb :interleaved-rgb)
-        (image-add-plane!      image :interleaved width height 24)
-        (image-set-plane-data! image :interleaved data)
-        (with-context (context)
-          (with-encoder-for-format (encoder context :hevc)
-            (encoder-set-lossy-quality! encoder 95)
-            (context-encode-image!
-             context image encoder
-             +default-encoding-options+))
-          (values (context-write-to-octets context) data))))))
+    (with-image (image width height :rgb :interleaved-rgb)
+      (image-add-plane!      image :interleaved width height 24)
+      (image-set-plane-data! image :interleaved data)
+      (with-context (context)
+        (with-encoder-for-format (encoder context format)
+          (encoder-set-lossy-quality! encoder 95)
+          (context-encode-image!
+           context image encoder
+           +default-encoding-options+))
+        (values (context-write-to-octets context) data)))))
 
 (serapeum:-> decode-image
              ((simple-array (unsigned-byte 8) (*)))
              (values (simple-array (unsigned-byte 8) (* * 3)) &optional))
 (defun decode-image (data)
-  (with-libheif (+default-init-parameters+)
-    (with-context (ctx)
-      (context-read-from-octets! ctx data)
-      (with-primary-image-handle (handle ctx)
-        (with-decode-image (image handle :rgb :interleaved-rgb +default-decoding-options+)
-          (image-plane-data image :interleaved))))))
+  (with-context (ctx)
+    (context-read-from-octets! ctx data)
+    (with-primary-image-handle (handle ctx)
+      (with-decode-image (image handle :rgb :interleaved-rgb +default-decoding-options+)
+        (image-plane-data image :interleaved)))))
 
 (serapeum:-> image-diff ((simple-array (unsigned-byte 8) (* * 3))
                          (simple-array (unsigned-byte 8) (* * 3)))
@@ -91,26 +89,35 @@
         (abs (- (row-major-aref image1 i)
                 (row-major-aref image2 i)))))
 
+(defun get-suitable-encoder ()
+  (encoder-descriptor-compression-format
+   (find :mask (encoder-descriptors)
+         :key #'encoder-descriptor-compression-format
+         :test-not #'eq)))
+
 (in-suite libheif)
 
 (test check-encoder/decoder-interleaved
   (ff:with-float-traps-masked (:overflow :divide-by-zero :invalid)
-    (loop repeat 100
-          for width  = (+ 100 (random 1000))
-          for height = (+ 100 (random 1000)) do
-          (multiple-value-bind (data image-expected)
-              (encode-image height width)
-            (let ((image-received (decode-image data)))
-              (is (< (image-diff image-expected image-received)
-                     (* 128 3 height width 5f-2))))))))
+    (with-libheif (+default-init-parameters+)
+      (loop repeat 100
+            with format = (get-suitable-encoder)
+            for width  = (+ 100 (random 1000))
+            for height = (+ 100 (random 1000)) do
+            (multiple-value-bind (data image-expected)
+                (encode-image height width format)
+              (let ((image-received (decode-image data)))
+                (is (< (image-diff image-expected image-received)
+                       (* 128 3 height width 5f-2)))))))))
 
 (test check-image-dimensions
   (ff:with-float-traps-masked (:overflow :divide-by-zero :invalid)
-    (loop repeat 100
-          for width  = (+ 100 (random 1000))
-          for height = (+ 100 (random 1000))
-          for data   = (encode-image height width) do
-          (with-libheif (+default-init-parameters+)
+    (with-libheif (+default-init-parameters+)
+      (loop repeat 100
+            with format = (get-suitable-encoder)
+            for width  = (+ 100 (random 1000))
+            for height = (+ 100 (random 1000))
+            for data   = (encode-image height width format) do
             (with-context (ctx)
               (context-read-from-octets! ctx data)
               (with-primary-image-handle (handle ctx)

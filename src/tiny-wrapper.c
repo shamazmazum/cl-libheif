@@ -12,7 +12,7 @@ trampoline (struct heif_context *ctx,
     writer (data, size);
     result.code    = 0;
     result.subcode = 0;
-    result.message = NULL;
+    result.message = "Success";
     return result;
 }
 
