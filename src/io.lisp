@@ -51,43 +51,23 @@
 
 (defvar *current-output-stream*)
 
-;; Actually, return type is struct heif_error, but I cannot return a
-;; struct from a callback. Fortunately, this struct is too small,
-;; exactly 16 bytes, so it can be returned in RAX/RDX pair on x86-64.
-;; The underlying code will only read the first value, so it's all
-;; that matters.
-;;
-;; This is a very fragile solution, though.
-(defcallback write-to-stream-callback :int
-    ((context  :pointer)
-     (data     :pointer)
-     (size     :size)
-     (userdata :pointer))
-  (declare (ignore context userdata))
+(defcallback write-to-stream-callback :void
+    ((data     :pointer)
+     (size     :size))
   (loop for i below size do
         (write-byte (mem-aref data :uint8 i)
-                    *current-output-stream*))
-  0)
+                    *current-output-stream*)))
 
-(defcstruct heif-writer
-  (api-version :int)
-  (write       :pointer))
-
-(defcfun (%context-write "heif_context_write") (:struct heif-error)
+(defcfun (%context-write "heif_wrapper_context_write") (:struct heif-error)
   (context  :pointer)
-  (writer   (:pointer (:struct heif-writer)))
-  (userdata :pointer))
+  (writer   :pointer))
 
-#+x86-64
-(progn
-  (serapeum:-> context-write-to-octets (context)
-               (values (simple-array (unsigned-byte 8) (*)) &optional))
-  (defun context-write-to-octets (context)
-    "Write context to a simple array of octets."
-    (let ((*current-output-stream* (tos:make-octet-output-stream)))
-      (with-foreign-object (writer-ptr '(:struct heif-writer))
-        (with-foreign-slots ((api-version write) writer-ptr (:struct heif-writer))
-          (setf api-version 1 write (callback write-to-stream-callback)))
-        (let ((result (%context-write (context-obj context) writer-ptr (null-pointer))))
-          (analyse-error result)))
-      (tos:get-output-stream-octets *current-output-stream*))))
+(serapeum:-> context-write-to-octets (context)
+             (values (simple-array (unsigned-byte 8) (*)) &optional))
+(defun context-write-to-octets (context)
+  "Write context to a simple array of octets."
+  (let* ((*current-output-stream* (tos:make-octet-output-stream))
+         (result (%context-write (context-obj context)
+                                 (callback write-to-stream-callback))))
+    (analyse-error result)
+    (tos:get-output-stream-octets *current-output-stream*)))
