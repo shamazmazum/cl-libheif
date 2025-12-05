@@ -4,6 +4,13 @@
    manipulation with HEIF format. Currently, this wrapper has support for
    encoding and decoding of toplevel images and extraction of metadata. Also,
    currently only images with 8 bits per color are supported.
+
+   Dependencies:
+   @begin(list)
+     @item(libheif >= 1.17.6 (with headers!))
+     @item(libffi)
+     @item(C compiler, due to limitations in CFFI)
+   @end(list)
 @end(section)
 
 @begin(section)
