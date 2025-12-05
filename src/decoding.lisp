@@ -24,8 +24,9 @@
     (image (mem-ref image-ptr :pointer))))
 
 (defmacro with-decode-image ((image handle colorspace chroma options) &body body)
-  "Decode an image and execute BODY in the scope of that image. Make
-sure the image is released when the control leaves BODY."
+  "Bind @c(image) to a decoded image and execute @c(body) in the scope
+of that image. Make sure the image is released when the control leaves
+@c(body)."
   `(let ((,image (decode-image ,handle ,colorspace ,chroma ,options)))
      (unwind-protect
           (progn ,@body)

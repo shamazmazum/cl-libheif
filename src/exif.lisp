@@ -23,9 +23,9 @@
   (size (unsigned-byte 64))
   (id   (unsigned-byte 32)))
 
-(serapeum:-> get-metadata-refs (image-handle &optional (or string null) (integer 0))
+(serapeum:-> image-handle-metadata-refs (image-handle &optional (or string null) (integer 0))
              (values list &optional))
-(defun get-metadata-refs (handle &optional filter (max-ids 0))
+(defun image-handle-metadata-refs (handle &optional filter (max-ids 0))
   "Get a list of metadata blocks. If MAX-IDS is positive, return no
 more than MAX-IDS entries."
   (let* ((filter (if filter filter (null-pointer)))
@@ -45,9 +45,10 @@ more than MAX-IDS entries."
               (image-handle-obj handle) id)
              id)))))
 
-(serapeum:-> get-metadata (image-handle metadata-ref)
+(serapeum:-> image-handle-metadata (image-handle metadata-ref)
              (values (simple-array (unsigned-byte 8) (*)) &optional))
-(defun get-metadata (handle ref)
+(defun image-handle-metadata (handle ref)
+  "Get a metadata block by its reference."
   (let* ((size (metadata-ref-size ref))
          (result (make-shareable-byte-vector size)))
     (with-pointer-to-vector-data (data-ptr result)

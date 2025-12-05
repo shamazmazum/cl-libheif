@@ -22,8 +22,9 @@
   (values))
 
 (defmacro with-context ((context) &body body)
-  "Execute BODY in libheif context. The context is destroyed when the
-control leaves BODY."
+  "Bind @c(context) to a newly created libheif context and execute
+@c(body) in its scope. The context is destroyed when the control
+leaves @c(body)."
   `(let ((,context (alloc-context)))
      (unwind-protect
           (progn ,@body)

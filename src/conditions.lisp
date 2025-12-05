@@ -20,7 +20,8 @@
              (error-message c)
              (error-code    c)
              (error-subcode c))))
-  (:documentation "libheif error"))
+  (:documentation "Libheif error. It's signalled when libheif returns
+an error code."))
 
 (define-condition bps-error (cl-libheif-error)
   ((bps :type    integer
@@ -30,7 +31,8 @@
    (lambda (c s)
      (format s "Unknown bits per sample: ~d"
              (error-bps c))))
-  (:documentation "Signalled by the wrapper when libheif reports unknown BPS value"))
+  (:documentation "Signalled by the wrapper when libheif reports
+a BPS value which is unsupported by this wrapper."))
 
 (define-condition no-plane-error (cl-libheif-error)
   ()
@@ -38,7 +40,8 @@
    (lambda (c s)
      (declare (ignore c))
      (format s "No such plane in the image")))
-  (:documentation "Signalled by the wrapper when there is no requested plane in the image"))
+  (:documentation "Signalled by the wrapper when there is no requested
+plane in the image."))
 
 (define-condition dimensions-mismatch (cl-libheif-error)
   ((dims :initarg :dims
@@ -47,7 +50,8 @@
    (lambda (c s)
      (format s "No plane with dimensionality ~a"
              (mismatched-dims c))))
-  (:documentation "Signalled when trying to set data of the wrong dimensionality to a plane"))
+  (:documentation "Signalled when trying to set data of the wrong
+dimensionality to a plane."))
 
 ;; Internal error struct
 (defcstruct (heif-error :class heif-error-type)

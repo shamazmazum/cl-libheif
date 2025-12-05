@@ -8,6 +8,7 @@
   :nonvisual)
 
 (deftype colorspace ()
+  "A type for the colorspace of an image."
   '(member :undefined :ycbcr :rgb :monochrome :nonvisual))
 
 (defcenum heif-chroma
@@ -24,6 +25,7 @@
   :interleaved-rrggbbaa-le)
 
 (deftype chroma ()
+  "A type which represents how color is encoded in the image."
   '(member
     :undefined :monochrome :420 :422 :444
     :interleaved-rgb
@@ -43,6 +45,7 @@
   :disparity)
 
 (deftype channel ()
+  "A type which represents a channel in the image."
   '(member
     :y :cb :cr
     :r :g :b
@@ -63,6 +66,8 @@
   :htj2k)
 
 (deftype compression-format ()
+  "A type which represents a compression format and is used in encoder
+selection."
   '(member
     :undefined
     :hevc

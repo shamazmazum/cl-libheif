@@ -29,8 +29,8 @@
 (defcfun (deinit "heif_deinit") :void)
 
 (defmacro with-libheif ((parameters) &body body)
-  "Execute BODY with libheif being initialized. It is deinitialized
-when the control leaves BODY."
+  "Initialize libheif and execute @c(body). Libheif is deinitialized
+when the control leaves @c(body)."
   `(progn
      (init ,parameters)
      (unwind-protect (progn ,@body)

@@ -48,9 +48,9 @@
   (values))
 
 (defmacro with-encoder-for-format ((encoder context format) &body body)
-  "Get an encoder for the specified format and execute BODY in its
-scope. Ensure that the encoder is released when the control leaves
-BODY."
+  "Bind @c(encoder) to an encoder for the specified format and execute
+@c(body) in its scope. Ensure that the encoder is released when the
+control leaves @c(body)."
   `(let ((,encoder (get-encoder-for-format ,context ,format)))
      (unwind-protect
           (progn ,@body)
@@ -61,8 +61,10 @@ BODY."
   (encoder :pointer)
   (quality :int))
 
-(serapeum:-> encoder-set-lossy-quality! (encoder integer) (values &optional))
+(serapeum:-> encoder-set-lossy-quality! (encoder (integer 0 100)) (values &optional))
 (defun encoder-set-lossy-quality! (encoder quality)
+  "Set a 'quality' factor (0-100). How this is mapped to actual
+encoding parameters is encoder dependent."
   (let ((result (%encoder-set-lossy-quality! (encoder-obj encoder) quality)))
     (analyse-error result))
   (values))
@@ -74,6 +76,7 @@ BODY."
 
 (serapeum:-> encoder-set-lossless! (encoder boolean) (values &optional))
 (defun encoder-set-lossless! (encoder enablep)
+  "Enable or disable lossless encoding."
   (let ((result (%encoder-set-lossless! (encoder-obj encoder) enablep)))
     (analyse-error result))
   (values))
@@ -90,6 +93,8 @@ BODY."
              (context image encoder encoding-options)
              (values &optional))
 (defun context-encode-image! (context image encoder options)
+  "Compress the input image. The first compressed image becomes the
+primary image in that context."
   (let ((result (%context-encode-image!
                  (context-obj          context)
                  (image-obj            image)
@@ -126,6 +131,8 @@ BODY."
 
 (serapeum:-> encoder-descriptor-name (encoder-descriptor) (values string &optional))
 (defun encoder-descriptor-name (descriptor)
+  "Return a long, descriptive name of the encoder (including version
+information)."
   (%encoder-descriptor-name (encoder-descriptor-obj descriptor)))
 
 (defcfun (%encoder-descriptor-id-name "heif_encoder_descriptor_get_id_name") :string
@@ -133,6 +140,8 @@ BODY."
 
 (serapeum:-> encoder-descriptor-id-name (encoder-descriptor) (values string &optional))
 (defun encoder-descriptor-id-name (descriptor)
+  "Return a short, symbolic name for identifying the encoder. This
+name should stay constant over different encoder versions."
   (%encoder-descriptor-id-name (encoder-descriptor-obj descriptor)))
 
 (defcfun (%encoder-descriptor-compression-format
@@ -144,6 +153,7 @@ BODY."
              (encoder-descriptor)
              (values compression-format &optional))
 (defun encoder-descriptor-compression-format (descriptor)
+  "Get compression format for this encoder."
   (%encoder-descriptor-compression-format (encoder-descriptor-obj descriptor)))
 
 (defcfun (%encoder-descriptor-supports-lossy-compression-p
@@ -155,6 +165,8 @@ BODY."
              (encoder-descriptor)
              (values boolean &optional))
 (defun encoder-descriptor-supports-lossy-compression-p (descriptor)
+  "Return @c(t) if this encoder supports lossy compression, @c(nil)
+oterwise."
   (%encoder-descriptor-supports-lossy-compression-p
    (encoder-descriptor-obj descriptor)))
 
@@ -167,6 +179,8 @@ BODY."
              (encoder-descriptor)
              (values boolean &optional))
 (defun encoder-descriptor-supports-lossless-compression-p (descriptor)
+  "Return @c(t) if this encoder supports lossless compression, @c(nil)
+oterwise."
   (%encoder-descriptor-supports-lossless-compression-p
    (encoder-descriptor-obj descriptor)))
 
@@ -187,8 +201,9 @@ BODY."
     (encoder (mem-ref encoder-ptr :pointer))))
 
 (defmacro with-encoder ((encoder context descriptor) &body body)
-  "Get a reference to the encoder by its descriptor and execute BODY
-in its scope. Make sure it is released when the control leaves BODY."
+  "Bind @c(encoder) to a reference to the encoder by its descriptor
+and execute @c(body) in its scope. Make sure it is released when the
+control leaves @c(body)."
   `(let ((,encoder (context-encoder ,context ,descriptor)))
      (unwind-protect
           (progn ,@body)

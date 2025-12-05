@@ -2,7 +2,8 @@
    @title(Overview)
    @c(cl-libheif) is a wrapper around libheif library which is a library for
    manipulation with HEIF format. Currently, this wrapper has support for
-   encoding and decoding of toplevel images and extraction of metadata.
+   encoding and decoding of toplevel images and extraction of metadata. Also,
+   currently only images with 8 bits per color are supported.
 @end(section)
 
 @begin(section)
@@ -15,6 +16,7 @@
      @item(When a function has any user-observable side effects, e.g. it changes
      some internal state, creates files in a file system etc., it ends with an
      exclamation point (@c(!)).)
+     @item(If a function is a predicate, @c(-p) suffix is added to the name.)
    @end(list)
    Also cl-libheif does not export any functions which create resources which
    must be explicitly freed later. Instead it exports @c(with-) macros with the
@@ -103,8 +105,8 @@
       (with-primary-image-handle (handle ctx)
         (mapcar
          (lambda (ref)
-           (get-metadata handle ref))
-         (get-metadata-refs handle))))))
+           (image-handle-metadata handle ref))
+         (image-handle-metadata-refs handle))))))
      @end(code)
    @end(section)
 @end(section)
@@ -146,15 +148,66 @@
    @end(section)
 
    @begin(section)
-     @title(Image handle)
+     @title(Image handles)
      @cl:with-package[name="cl-libheif"](
-     @cl:doc(macro with-primary-image-handle)
-     @cl:doc(macro with-image-handle)
-     @cl:doc(function image-handle-width)
-     @cl:doc(function image-handle-height)
-     @cl:doc(type colorspace)
-     @cl:doc(type chroma)
-     @cl:doc(function image-handle-preferred-decoding-colorspace)
+       @cl:doc(macro with-primary-image-handle)
+       @cl:doc(macro with-image-handle)
+       @cl:doc(function image-handle-width)
+       @cl:doc(function image-handle-height)
+       @cl:doc(type colorspace)
+       @cl:doc(type chroma)
+       @cl:doc(function image-handle-preferred-decoding-colorspace)
+     )
+   @end(section)
+
+   @begin(section)
+     @title(Images)
+     @cl:with-package[name="cl-libheif"](
+       @cl:doc(type channel)
+       @cl:doc(function image-width)
+       @cl:doc(function image-height)
+       @cl:doc(function image-bits-per-pixel)
+       @cl:doc(function image-bits-per-pixel-range)
+       @cl:doc(function image-plane-data)
+       @cl:doc(macro with-image)
+       @cl:doc(function image-add-plane!)
+       @cl:doc(function image-set-plane-data!)
+     )
+   @end(section)
+
+   @begin(section)
+     @title(Encoding)
+     @cl:with-package[name="cl-libheif"](
+       @cl:doc(function encoder-descriptors)
+       @cl:doc(function encoder-descriptor-name)
+       @cl:doc(function encoder-descriptor-id-name)
+       @cl:doc(function encoder-descriptor-compression-format)
+       @cl:doc(function encoder-descriptor-supports-lossy-compression-p)
+       @cl:doc(function encoder-descriptor-supports-lossless-compression-p)
+       @cl:doc(variable +default-encoding-options+)
+       @cl:doc(type compression-format)
+       @cl:doc(macro with-encoder)
+       @cl:doc(macro with-encoder-for-format)
+       @cl:doc(function encoder-set-lossy-quality!)
+       @cl:doc(function encoder-set-lossless!)
+       @cl:doc(function context-encode-image!)
+     )
+   @end(section)
+
+   @begin(section)
+     @title(Decoding)
+     @cl:with-package[name="cl-libheif"](
+       @cl:doc(variable +default-decoding-options+)
+       @cl:doc(macro with-decode-image)
+     )
+   @end(section)
+
+   @begin(section)
+     @title(Metadata)
+     @cl:with-package[name="cl-libheif"](
+       @cl:doc(defconstructor metadata-ref)
+       @cl:doc(function image-handle-metadata-refs)
+       @cl:doc(function image-handle-metadata)
      )
    @end(section)
 @end(section)

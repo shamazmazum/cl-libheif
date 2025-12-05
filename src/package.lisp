@@ -76,5 +76,5 @@
    #:metadata-ref
    #:metadata-ref-id
    #:metadata-ref-size
-   #:get-metadata-refs
-   #:get-metadata))
+   #:image-handle-metadata-refs
+   #:image-handle-metadata))
