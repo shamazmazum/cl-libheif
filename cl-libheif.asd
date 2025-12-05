@@ -3,10 +3,12 @@
     :maintainer "Vasily Postnicov <shamaz.mazum@gmail.com>"
     :licence "2-clause BSD"
     :version "0.1"
+    :defsystem-depends-on (:cwrapper)
     :depends-on (:cffi :cffi-libffi :serapeum :trivial-octet-streams)
     :serial t
     :pathname "src"
     :components ((:file "package")
+                 (:cwrapper "tiny-wrapper")
                  (:file "conditions")
                  (:file "library")
                  (:file "enums")
