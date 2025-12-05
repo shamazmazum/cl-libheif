@@ -1,3 +1,6 @@
+// This wrapper is here because CFFI cannot return structs from
+// callbacks.
+
 #include <libheif/heif.h>
 
 typedef void (*mywriter) (const void *, size_t);
