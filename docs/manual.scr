@@ -176,6 +176,7 @@
        @cl:doc(function image-bits-per-pixel)
        @cl:doc(function image-bits-per-pixel-range)
        @cl:doc(function image-plane-data)
+       @cl:doc(function image-has-plane-p)
        @cl:doc(macro with-image)
        @cl:doc(function image-add-plane!)
        @cl:doc(function image-set-plane-data!)

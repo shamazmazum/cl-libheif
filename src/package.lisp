@@ -67,6 +67,7 @@
    #:image-width
    #:image-bits-per-pixel
    #:image-bits-per-pixel-range
+   #:image-has-plane-p
    #:image-plane-data
    #:with-image
    #:image-add-plane!

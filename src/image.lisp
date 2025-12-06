@@ -87,7 +87,7 @@ bit, this function also returns '12', not '48' or '64'
 of monochrome channels (@c(:monochrome), @c(:r), @c(:y) etc.) the
 returned array has dimensions @c((height width 1)). In the case of
 interleaved color channels the returned array has dimensions @c((height
-width 3))."
+width 3)) or @c((height weight 4)) (the latter with alpha channel)."
   (declare (optimize (speed 3)))
   (with-foreign-object (stride-ptr :int)
     (let ((ptr (%image-plane-readonly (image-obj image) channel stride-ptr)))
@@ -108,6 +108,13 @@ width 3))."
                     (setf (row-major-aref plane (+ plane-offset idx))
                           (mem-aref ptr :uint8  (+ mem-offset   idx)))))
         plane))))
+
+(serapeum:-> image-has-plane-p (image channel)
+             (values boolean &optional))
+(defun image-has-plane-p (image channel)
+  "Return @c(t) if an image has a plane specified by @c(channel), @c(nil) otherwise."
+  (let ((ptr (%image-plane-readonly (image-obj image) channel (null-pointer))))
+    (not (null-pointer-p ptr))))
 
 ;; Image creation
 
@@ -164,7 +171,8 @@ plane via @c(image-set-plane-data!)."
   "Copy a simple array of octets to a plane which is previously
 created with @c(image-add-plane!). The array must have dimensions
 @c((height width 1)) for monochrome/one color per channel data or
-@c((height width 3)) for interleaved color data."
+@c((height width 3)) / @c((height width 4)) for interleaved color data
+(the latter with alpha)."
   (declare (optimize (speed 3)))
   (let ((rows   (array-dimension data 0))
         (cols   (array-dimension data 1))
