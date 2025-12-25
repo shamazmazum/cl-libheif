@@ -25,6 +25,7 @@
    #:context-read-from-octets!
    #:context-read-from-stream!
    #:context-write-to-file!
+   #:context-write-to-stream!
    #:context-write-to-octets
    #:context-top-level-image-ids
    #:context-primary-image-id

@@ -165,6 +165,7 @@
        @cl:doc(function context-read-from-octets!)
        @cl:doc(function context-read-from-stream!)
        @cl:doc(function context-write-to-file!)
+       @cl:doc(function context-write-to-stream!)
        @cl:doc(function context-write-to-octets)
        @cl:doc(function context-top-level-image-ids)
        @cl:doc(function context-primary-image-id)

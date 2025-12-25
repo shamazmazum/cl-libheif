@@ -163,25 +163,32 @@ contexts) as you wish."
     (analyse-error result))
   (values))
 
-(defvar *current-output-stream*)
-
 (defcallback write-to-stream-callback :void
     ((data     :pointer)
      (size     :size))
   (loop for i below size do
         (write-byte (mem-aref data :uint8 i)
-                    *current-output-stream*)))
+                    *heif-io-stream*)))
 
 (defcfun (%context-write "heif_wrapper_context_write") (:struct heif-error)
   (context  :pointer)
   (writer   :pointer))
 
+(serapeum:-> context-write-to-stream! (context t)
+             (values &optional))
+(defun context-write-to-stream! (context stream)
+  "Write context to a binary stream (element type must be @c((unsigned-byte 8)))."
+  (let* ((*heif-io-stream* stream)
+         (result (%context-write
+                  (context-obj context)
+                  (callback write-to-stream-callback))))
+    (analyse-error result))
+  (values))
+
 (serapeum:-> context-write-to-octets (context)
              (values (simple-array (unsigned-byte 8) (*)) &optional))
 (defun context-write-to-octets (context)
   "Write context to a simple array of octets."
-  (let* ((*current-output-stream* (tos:make-octet-output-stream))
-         (result (%context-write (context-obj context)
-                                 (callback write-to-stream-callback))))
-    (analyse-error result)
-    (tos:get-output-stream-octets *current-output-stream*)))
+  (let ((stream (tos:make-octet-output-stream)))
+    (context-write-to-stream! context stream)
+    (tos:get-output-stream-octets stream)))
