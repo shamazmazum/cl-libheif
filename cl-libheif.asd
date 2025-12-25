@@ -39,7 +39,10 @@
     :maintainer "Vasily Postnicov <shamaz.mazum@gmail.com>"
     :licence "2-clause BSD"
     :version "0.1"
-    :depends-on (:cffi :cffi-libffi :serapeum :trivial-octet-streams)
+    :depends-on (:cffi
+                 :cffi-libffi
+                 :serapeum
+                 :trivial-octet-streams)
     :serial t
     :pathname "src"
     :components ((:file "package")
@@ -69,4 +72,8 @@
   :pathname "tests"
   :components ((:file "package")
                (:file "tests" :depends-on ("package")))
-  :depends-on (:cl-libheif :fiveam :cl-value-noise :float-features))
+  :depends-on (:cl-libheif
+               :fiveam
+               :cl-value-noise
+               :float-features
+               :flexi-streams))

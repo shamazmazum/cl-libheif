@@ -72,6 +72,23 @@
           (image-plane-data image :y))))))
      @end(code)
 
+     The wrapper can also read from a stream:
+     @begin[lang=lisp](code)
+(serapeum:-> decode (stream)
+             (values (simple-array (unsigned-byte 8) (* * 3)) &optional))
+(defun decode (stream)
+  (with-libheif (+default-init-parameters+)
+    (with-context (ctx)
+      (with-stream-reader (reader stream)
+        (context-read-from-stream! ctx reader)
+        (with-primary-image-handle (handle ctx)
+          (with-decode-image (image handle :rgb :interleaved-rgb +default-decoding-options+)
+            (image-plane-data image :interleaved)))))))
+
+(with-open-file (input "my-photo.heic" :element-type '(unsigned-byte 8))
+  (decode input))
+     @end(code)
+
      You can obtain a preferred colorspace with
      @c(image-handle-preferred-decoding-colorspace).
    @end(section)
@@ -143,8 +160,10 @@
      @title(Context)
      @cl:with-package[name="cl-libheif"](
        @cl:doc(macro with-context)
+       @cl:doc(macro with-stream-reader)
        @cl:doc(function context-read-from-file!)
        @cl:doc(function context-read-from-octets!)
+       @cl:doc(function context-read-from-stream!)
        @cl:doc(function context-write-to-file!)
        @cl:doc(function context-write-to-octets)
        @cl:doc(function context-top-level-image-ids)

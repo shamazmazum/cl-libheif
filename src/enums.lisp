@@ -80,3 +80,9 @@ selection."
     :uncompressed
     :mask
     :htj2k))
+
+(defcenum reader-grow-status
+  :size-reached
+  :status-timeout
+  :size-beyound-eof
+  :status-error)

@@ -1,6 +1,7 @@
 (in-package :cl-libheif/tests)
 
 (def-suite libheif :description "Test cl-libheif wrapper")
+(def-suite io      :description "Test IO variants")
 
 (defun run-tests ()
   (every #'identity
@@ -8,7 +9,7 @@
                    (let ((status (run suite)))
                      (explain! status)
                      (results-status status)))
-                 '(libheif))))
+                 '(libheif io))))
 
 (serapeum:-> interleave-planes
              ((simple-array (unsigned-byte 8) 2)
@@ -79,6 +80,16 @@
       (with-decode-image (image handle :rgb :interleaved-rgb +default-decoding-options+)
         (image-plane-data image :interleaved)))))
 
+(serapeum:-> decode-image-stream (t)
+             (values (simple-array (unsigned-byte 8) (* * 3)) &optional))
+(defun decode-image-stream (stream)
+  (with-context (ctx)
+    (with-stream-reader (reader stream)
+      (context-read-from-stream! ctx reader)
+      (with-primary-image-handle (handle ctx)
+        (with-decode-image (image handle :rgb :interleaved-rgb +default-decoding-options+)
+          (image-plane-data image :interleaved))))))
+
 (serapeum:-> image-diff ((simple-array (unsigned-byte 8) (* * 3))
                          (simple-array (unsigned-byte 8) (* * 3)))
              (values unsigned-byte &optional))
@@ -123,3 +134,17 @@
               (with-primary-image-handle (handle ctx)
                 (is (= width  (image-handle-width handle)))
                 (is (= height (image-handle-height handle)))))))))
+
+(in-suite io)
+(test check-stream-reader
+  (ff:with-float-traps-masked (:overflow :divide-by-zero :invalid)
+    (with-libheif (+default-init-parameters+)
+      (loop repeat 100
+            with format = (get-suitable-encoder)
+            for width  = (+ 100 (random 1000))
+            for height = (+ 100 (random 1000)) do
+            (let ((data (encode-image height width format)))
+              (fs:with-input-from-sequence (input data)
+                (let ((image-received-1 (decode-image        data))
+                      (image-received-2 (decode-image-stream input)))
+                  (is (equalp image-received-1 image-received-2)))))))))

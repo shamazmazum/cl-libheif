@@ -14,11 +14,16 @@
    #:+default-init-parameters+
    #:with-libheif
 
+   ;; Stream reader
+   #:stream-reader
+   #:with-stream-reader
+
    ;; Context
    #:context
    #:with-context
    #:context-read-from-file!
    #:context-read-from-octets!
+   #:context-read-from-stream!
    #:context-write-to-file!
    #:context-write-to-octets
    #:context-top-level-image-ids
