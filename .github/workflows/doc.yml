@@ -10,6 +10,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install libffi-dev libheif-dev build-essential
       - name: Checkout Codex
         uses: actions/checkout@v2
         with:
@@ -28,7 +32,7 @@ jobs:
           ros -e '(ql-dist:install-dist "http://dist.ultralisp.org/" :prompt nil)'
       - name: Build documentation
         run: |
-          ros -s codex -e '(codex:document :cl-libheif) :skip-undocumented t'
+          ros -s codex -e '(codex:document :cl-libheif :skip-undocumented t)'
       - name: Deploy to GH pages
         uses: peaceiris/actions-gh-pages@v3
         with:
