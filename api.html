@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+  API &ndash; cl-libheif
+</title>
+    <link rel="stylesheet" href="static/style.css"/>
+    
+  <link rel="stylesheet" href="static/highlight.css"/>
+  <script src="static/highlight.js"></script>
+  <script src="static/load-mathjax.js" async></script>
+  <style>
+   /* Highlight the current top-level TOC item, and hide the TOC of all other items */
+
+   .toc a[data-node="api"] {
+       color: #AD3108;
+   }
+
+   .toc ol {
+       display: none;
+   }
+
+   .toc > ol {
+       display: block;
+   }
+
+   .toc li a[data-node="api"] + ol {
+       display: block;
+   }
+
+   .toc li a[data-node="api"] + ol li {
+       font-size: 16px;
+       margin: 0 10px;
+   }
+
+   .toc li a[active] + ol li:first-child {
+       margin-top: 5px;
+   }
+  </style>
+
+  </head>
+  <body>
+    
+  <h1 class="doc-title">cl-libheif » API</h1>
+  <article id="article" data-section="api">
+    <aside>
+      <ol class="toc"><li><a href="index.html" data-node="index">Overview</a></li><li><a href="naming-convention.html" data-node="naming-convention">Naming convention</a></li><li><a href="idiosyncrasies.html" data-node="idiosyncrasies">Idiosyncrasies</a></li><li><a href="examples.html" data-node="examples">Examples</a><ol><li><a href="examples.html#image-decoding" data-node="image-decoding">Image decoding</a></li><li><a href="examples.html#image-encoding" data-node="image-encoding">Image encoding</a></li><li><a href="examples.html#metadata" data-node="metadata">Metadata</a></li></ol></li><li><a href="api.html" data-node="api">API</a><ol><li><a href="api.html#conditions" data-node="conditions">Conditions</a></li><li><a href="api.html#libheif--(-de-)-initialization" data-node="libheif--(-de-)-initialization">libheif (de)initialization</a></li><li><a href="api.html#context" data-node="context">Context</a></li><li><a href="api.html#image-handles" data-node="image-handles">Image handles</a></li><li><a href="api.html#images" data-node="images">Images</a></li><li><a href="api.html#encoding" data-node="encoding">Encoding</a></li><li><a href="api.html#decoding" data-node="decoding">Decoding</a></li><li><a href="api.html#0-metadata" data-node="0-metadata">Metadata</a></li></ol></li></ol>
+    </aside>
+    <main class="codex-section">
+      <p>
+   </p><h1 id="conditions">Conditions</h1>
+     
+       <div class="codex-doc-node codex-record codex-condition"><code class="codex-name">cl-libheif-error</code><div class="codex-docstring">Generic cl-libheif error</div><ul class="codex-slot-list"></ul></div>
+       <div class="codex-doc-node codex-record codex-condition"><code class="codex-name">libheif-error</code><div class="codex-docstring">Libheif error. It's signalled when libheif returns
+an error code.</div><ul class="codex-slot-list"><li class="codex-slot codex-class-slot"><code class="codex-name">message</code><div class="codex-docstring"></div><div class="codex-class-struct-slot-option-node"><table class="codex-class-struct-slot-option-table"><tr class="codex-class-struct-slot-option-row"><td class="codex-class-struct-slot-option-label-cell">Allocation</td><td class="codex-class-struct-slot-option-value-cell codex-class-struct-slot-option-symbol-list-cell">instance</td></tr><tr class="codex-class-struct-slot-option-row"><td class="codex-class-struct-slot-option-label-cell">Type</td><td class="codex-class-struct-slot-option-value-cell codex-class-struct-slot-option-symbol-list-cell"><code class="codex-class-struct-slot-symbol-list">string</code></td></tr><tr class="codex-class-struct-slot-option-row"><td class="codex-class-struct-slot-option-label-cell">Initarg</td><td class="codex-class-struct-slot-option-value-cell codex-class-struct-slot-option-symbol-list-cell"><code class="codex-class-struct-slot-symbol-list">:message</code></td></tr><tr class="codex-class-struct-slot-option-row"><td class="codex-class-struct-slot-option-label-cell">Readers</td><td class="codex-class-struct-slot-option-value-cell codex-class-struct-slot-option-symbol-list-cell"><code class="codex-class-struct-slot-symbol-list">(error-message)</code></td></tr></table></div></li><li class="codex-slot codex-class-slot"><code class="codex-name">code</code><div class="codex-docstring"></div><div class="codex-class-struct-slot-option-node"><table class="codex-class-struct-slot-option-table"><tr class="codex-class-struct-slot-option-row"><td class="codex-class-struct-slot-option-label-cell">Allocation</td><td class="codex-class-struct-slot-option-value-cell codex-class-struct-slot-option-symbol-list-cell">instance</td></tr><tr class="codex-class-struct-slot-option-row"><td class="codex-class-struct-slot-option-label-cell">Type</td><td class="codex-class-struct-slot-option-value-cell codex-class-struct-slot-option-symbol-list-cell"><code class="codex-class-struct-slot-symbol-list">(integer 0)</code></td></tr><tr class="codex-class-struct-slot-option-row"><td class="codex-class-struct-slot-option-label-cell">Initarg</td><td class="codex-class-struct-slot-option-value-cell codex-class-struct-slot-option-symbol-list-cell"><code class="codex-class-struct-slot-symbol-list">:code</code></td></tr><tr class="codex-class-struct-slot-option-row"><td class="codex-class-struct-slot-option-label-cell">Readers</td><td class="codex-class-struct-slot-option-value-cell codex-class-struct-slot-option-symbol-list-cell"><code class="codex-class-struct-slot-symbol-list">(error-code)</code></td></tr></table></div></li><li class="codex-slot codex-class-slot"><code class="codex-name">subcode</code><div class="codex-docstring"></div><div class="codex-class-struct-slot-option-node"><table class="codex-class-struct-slot-option-table"><tr class="codex-class-struct-slot-option-row"><td class="codex-class-struct-slot-option-label-cell">Allocation</td><td class="codex-class-struct-slot-option-value-cell codex-class-struct-slot-option-symbol-list-cell">instance</td></tr><tr class="codex-class-struct-slot-option-row"><td class="codex-class-struct-slot-option-label-cell">Type</td><td class="codex-class-struct-slot-option-value-cell codex-class-struct-slot-option-symbol-list-cell"><code class="codex-class-struct-slot-symbol-list">(integer 0)</code></td></tr><tr class="codex-class-struct-slot-option-row"><td class="codex-class-struct-slot-option-label-cell">Initarg</td><td class="codex-class-struct-slot-option-value-cell codex-class-struct-slot-option-symbol-list-cell"><code class="codex-class-struct-slot-symbol-list">:subcode</code></td></tr><tr class="codex-class-struct-slot-option-row"><td class="codex-class-struct-slot-option-label-cell">Readers</td><td class="codex-class-struct-slot-option-value-cell codex-class-struct-slot-option-symbol-list-cell"><code class="codex-class-struct-slot-symbol-list">(error-subcode)</code></td></tr></table></div></li></ul></div>
+       <div class="codex-doc-node codex-record codex-condition"><code class="codex-name">bps-error</code><div class="codex-docstring">Signalled by the wrapper when libheif reports
+a BPS value which is unsupported by this wrapper.</div><ul class="codex-slot-list"><li class="codex-slot codex-class-slot"><code class="codex-name">bps</code><div class="codex-docstring"></div><div class="codex-class-struct-slot-option-node"><table class="codex-class-struct-slot-option-table"><tr class="codex-class-struct-slot-option-row"><td class="codex-class-struct-slot-option-label-cell">Allocation</td><td class="codex-class-struct-slot-option-value-cell codex-class-struct-slot-option-symbol-list-cell">instance</td></tr><tr class="codex-class-struct-slot-option-row"><td class="codex-class-struct-slot-option-label-cell">Type</td><td class="codex-class-struct-slot-option-value-cell codex-class-struct-slot-option-symbol-list-cell"><code class="codex-class-struct-slot-symbol-list">integer</code></td></tr><tr class="codex-class-struct-slot-option-row"><td class="codex-class-struct-slot-option-label-cell">Initarg</td><td class="codex-class-struct-slot-option-value-cell codex-class-struct-slot-option-symbol-list-cell"><code class="codex-class-struct-slot-symbol-list">:bps</code></td></tr><tr class="codex-class-struct-slot-option-row"><td class="codex-class-struct-slot-option-label-cell">Readers</td><td class="codex-class-struct-slot-option-value-cell codex-class-struct-slot-option-symbol-list-cell"><code class="codex-class-struct-slot-symbol-list">(error-bps)</code></td></tr></table></div></li></ul></div>
+       <div class="codex-doc-node codex-record codex-condition"><code class="codex-name">no-plane-error</code><div class="codex-docstring">Signalled by the wrapper when there is no requested
+plane in the image.</div><ul class="codex-slot-list"></ul></div>
+       <div class="codex-doc-node codex-record codex-condition"><code class="codex-name">dimensions-mismatch</code><div class="codex-docstring">Signalled when trying to set data of the wrong
+dimensionality to a plane.</div><ul class="codex-slot-list"><li class="codex-slot codex-class-slot"><code class="codex-name">dims</code><div class="codex-docstring"></div><div class="codex-class-struct-slot-option-node"><table class="codex-class-struct-slot-option-table"><tr class="codex-class-struct-slot-option-row"><td class="codex-class-struct-slot-option-label-cell">Allocation</td><td class="codex-class-struct-slot-option-value-cell codex-class-struct-slot-option-symbol-list-cell">instance</td></tr><tr class="codex-class-struct-slot-option-row"><td class="codex-class-struct-slot-option-label-cell">Type</td><td class="codex-class-struct-slot-option-value-cell codex-class-struct-slot-option-symbol-list-cell"><code class="codex-class-struct-slot-symbol-list">nil</code></td></tr><tr class="codex-class-struct-slot-option-row"><td class="codex-class-struct-slot-option-label-cell">Initarg</td><td class="codex-class-struct-slot-option-value-cell codex-class-struct-slot-option-symbol-list-cell"><code class="codex-class-struct-slot-symbol-list">:dims</code></td></tr><tr class="codex-class-struct-slot-option-row"><td class="codex-class-struct-slot-option-label-cell">Readers</td><td class="codex-class-struct-slot-option-value-cell codex-class-struct-slot-option-symbol-list-cell"><code class="codex-class-struct-slot-symbol-list">(mismatched-dims)</code></td></tr></table></div></li></ul></div>
+     
+   <p>   </p><h1 id="libheif--(-de-)-initialization">libheif (de)initialization</h1>
+     
+       <div class="codex-doc-node codex-variable"><code class="codex-name">+default-init-parameters+</code><div class="codex-docstring">Default libheif init parameters.</div></div>
+       <div class="codex-doc-node codex-operator codex-macro"><code class="codex-name">with-libheif</code><code class="codex-lambda-list">((parameters) &amp;body body)</code><div class="codex-docstring">Initialize libheif and execute <code>body</code>. Libheif is deinitialized
+when the control leaves <code>body</code>.</div></div>
+     
+   <p>   </p><h1 id="context">Context</h1>
+     
+       <div class="codex-doc-node codex-operator codex-macro"><code class="codex-name">with-context</code><code class="codex-lambda-list">((context) &amp;body body)</code><div class="codex-docstring">Bind <code>context</code> to a newly created libheif context and execute
+<code>body</code> in its scope. The context is destroyed when the control
+leaves <code>body</code>.</div></div>
+       <div class="codex-doc-node codex-operator codex-macro"><code class="codex-name">with-stream-reader</code><code class="codex-lambda-list">((reader stream) &amp;body body)</code><div class="codex-docstring">Bind <code>reader</code> to a newly created stream reader which is used in
+<code>context-read-from-stream!</code>. All image reading and decoding must be
+performed within <code>body</code> if you read an image from a
+stream. <code>Stream</code> is an actual stream from which the image is
+read. It must have the element type <code>(unsigned-byte 8)</code>.</div></div>
+       <div class="codex-doc-node codex-operator codex-function"><code class="codex-name">context-read-from-file!</code><code class="codex-lambda-list">(context filename)</code><div class="codex-docstring">Read an image from a file.</div></div>
+       <div class="codex-doc-node codex-operator codex-function"><code class="codex-name">context-read-from-octets!</code><code class="codex-lambda-list">(context array)</code><div class="codex-docstring">Read an image from a simple array of octets (of type <code>(unsigned-byte 8)</code>).</div></div>
+       <div class="codex-doc-node codex-operator codex-function"><code class="codex-name">context-read-from-stream!</code><code class="codex-lambda-list">(context reader)</code><div class="codex-docstring">Read an image from a stream. The reader is created with
+<code>with-stream-reader</code> and all image reading and decoding (not only a
+call to this function) must be done in the body of that
+macro. Currently, this function also disables multithreaded decoding,
+but you can always create as many lisp threads (with their own libheif
+contexts) as you wish.</div></div>
+       <div class="codex-doc-node codex-operator codex-function"><code class="codex-name">context-write-to-file!</code><code class="codex-lambda-list">(context filename)</code><div class="codex-docstring">Write context to a file.</div></div>
+       <div class="codex-doc-node codex-operator codex-function"><code class="codex-name">context-write-to-stream!</code><code class="codex-lambda-list">(context stream)</code><div class="codex-docstring">Write context to a binary stream (element type must be <code>(unsigned-byte 8)</code>).</div></div>
+       <div class="codex-doc-node codex-operator codex-function"><code class="codex-name">context-write-to-octets</code><code class="codex-lambda-list">(context)</code><div class="codex-docstring">Write context to a simple array of octets.</div></div>
+       <div class="codex-doc-node codex-operator codex-function"><code class="codex-name">context-top-level-image-ids</code><code class="codex-lambda-list">(context &amp;optional (max-ids 0))</code><div class="codex-docstring">Return a list of toplevel image ids. If <code>max-ids</code> &gt; 0, return no
+more than <code>max-ids</code>.</div></div>
+       <div class="codex-doc-node codex-operator codex-function"><code class="codex-name">context-primary-image-id</code><code class="codex-lambda-list">(context)</code><div class="codex-docstring">Get ID of a primary toplevel image.</div></div>
+       <div class="codex-doc-node codex-operator codex-function"><code class="codex-name">context-set-maximum-image-size-limit!</code><code class="codex-lambda-list">(context width)</code><div class="codex-docstring">Set the maximum image size security limit. This function will set
+the maximum image area (number of pixels) to <code>(expt width 2)</code>.</div></div>
+       <div class="codex-doc-node codex-operator codex-function"><code class="codex-name">context-set-max-decoding-threads!</code><code class="codex-lambda-list">(context nthreads)</code><div class="codex-docstring">Set the maximal number of threads used by libheif. Setting this to
+0 means decoding in the main thread, while 1 means that a separate
+thread dedicated to decoding is created.</div></div>
+     
+   <p>   </p><h1 id="image-handles">Image handles</h1>
+     
+       <div class="codex-doc-node codex-operator codex-macro"><code class="codex-name">with-primary-image-handle</code><code class="codex-lambda-list">((handle context) &amp;body body)</code><div class="codex-docstring">Bind <code>handle</code> to the primary image handle in the context and
+execute <code>body</code> in the scope of that handle. This macro ensures that
+the handle is released when the control leaves <code>body</code>.</div></div>
+       <div class="codex-doc-node codex-operator codex-macro"><code class="codex-name">with-image-handle</code><code class="codex-lambda-list">((handle context id) &amp;body body)</code><div class="codex-docstring">Bind <code>handle</code> to an image handle with specified <code>id</code> and
+execute <code>body</code> in its scope. Make sure the handle is released when
+the control leaves <code>body</code>.</div></div>
+       <div class="codex-doc-node codex-operator codex-function"><code class="codex-name">image-handle-width</code><code class="codex-lambda-list">(handle)</code><div class="codex-docstring">Get width of the image</div></div>
+       <div class="codex-doc-node codex-operator codex-function"><code class="codex-name">image-handle-height</code><code class="codex-lambda-list">(handle)</code><div class="codex-docstring">Get height of the image</div></div>
+       <div class="codex-doc-node codex-type"><code class="codex-name">colorspace</code><code class="codex-type-def">(nil (quote (member :undefined :ycbcr :rgb :monochrome :nonvisual)))</code><div class="codex-docstring">A type for the colorspace of an image.</div></div>
+       <div class="codex-doc-node codex-type"><code class="codex-name">chroma</code><code class="codex-type-def">(nil (quote (member :undefined :monochrome :|420| :|422| :|444| :interleaved-rgb :interleaved-rgba :interleaved-rrggbb-be :interleaved-rrggbbaa-be :interleaved-rrggbb-le :interleaved-rrggbbaa-le)))</code><div class="codex-docstring">A type which represents how color is encoded in the image.</div></div>
+       <div class="codex-doc-node codex-operator codex-function"><code class="codex-name">image-handle-preferred-decoding-colorspace</code><code class="codex-lambda-list">(handle)</code><div class="codex-docstring">Get the colorspace and chroma parameters which are preferred when
+decoding the image.</div></div>
+     
+   <p>   </p><h1 id="images">Images</h1>
+     
+       <div class="codex-doc-node codex-type"><code class="codex-name">channel</code><code class="codex-type-def">(nil (quote (member :y :cb :cr :r :g :b :alpha :interleaved :filter-array :depth :disparity)))</code><div class="codex-docstring">A type which represents a channel in the image.</div></div>
+       <div class="codex-doc-node codex-operator codex-function"><code class="codex-name">image-width</code><code class="codex-lambda-list">(image channel)</code><div class="codex-docstring">Get width of a channel in the image.</div></div>
+       <div class="codex-doc-node codex-operator codex-function"><code class="codex-name">image-height</code><code class="codex-lambda-list">(image channel)</code><div class="codex-docstring">Get height of a channel in the image.</div></div>
+       <div class="codex-doc-node codex-operator codex-function"><code class="codex-name">image-bits-per-pixel</code><code class="codex-lambda-list">(image channel)</code><div class="codex-docstring">Get the number of bits per pixel in the given image
+channel. Returns -1 if a non-existing channel was given. Note that the
+number of bits per pixel may be different for each color channel.
+This function returns the number of bits used for storage of each
+pixel. Especially for HDR images, this is probably not what you
+want. Have a look at <code>image-bits-per-pixel-range</code>.</div></div>
+       <div class="codex-doc-node codex-operator codex-function"><code class="codex-name">image-bits-per-pixel-range</code><code class="codex-lambda-list">(image channel)</code><div class="codex-docstring"><p>Get the number of bits per pixel in the given image channel. This
+function returns the number of bits used for representing the pixel
+value, which might be smaller than the number of bits used in memory.</p><p>For example, in 12bit HDR images, this function returns '12', while
+still 16 bits are reserved for storage. For interleaved RGBA with 12
+bit, this function also returns '12', not '48' or '64'
+(<code>image-bits-per-pixel</code> returns 64 in this case).</p></div></div>
+       <div class="codex-doc-node codex-operator codex-function"><code class="codex-name">image-plane-data</code><code class="codex-lambda-list">(image channel)</code><div class="codex-docstring">Get a simple array of octets which contains plane data. In the case
+of monochrome channels (<code>:monochrome</code>, <code>:r</code>, <code>:y</code> etc.) the
+returned array has dimensions <code>(height width 1)</code>. In the case of
+interleaved color channels the returned array has dimensions <code>(height
+width 3)</code> or <code>(height weight 4)</code>(the latter with alpha channel).</div></div>
+       <div class="codex-doc-node codex-operator codex-function"><code class="codex-name">image-has-plane-p</code><code class="codex-lambda-list">(image channel)</code><div class="codex-docstring">Return <code>t</code> if an image has a plane specified by <code>channel</code>, <code>nil</code> otherwise.</div></div>
+       <div class="codex-doc-node codex-operator codex-macro"><code class="codex-name">with-image</code><code class="codex-lambda-list">((image width height colorspace chroma) &amp;body body)</code><div class="codex-docstring">Bind <code>image</code> to a new image and execute <code>body</code> in its
+scope. Make sure the image is released when the control leaves
+<code>body</code>.</div></div>
+       <div class="codex-doc-node codex-operator codex-function"><code class="codex-name">image-add-plane!</code><code class="codex-lambda-list">(image channel width height bit-depth)</code><div class="codex-docstring">Add a plane to an image. The actual data must be transferred to the
+plane via <code>image-set-plane-data!</code>.</div></div>
+       <div class="codex-doc-node codex-operator codex-function"><code class="codex-name">image-set-plane-data!</code><code class="codex-lambda-list">(image channel data)</code><div class="codex-docstring">Copy a simple array of octets to a plane which is previously
+created with <code>image-add-plane!</code>. The array must have dimensions
+<code>(height width 1)</code> for monochrome/one color per channel data or
+<code>(height width 3)</code> / <code>(height width 4)</code> for interleaved color data
+(the latter with alpha).</div></div>
+     
+   <p>   </p><h1 id="encoding">Encoding</h1>
+     
+       <div class="codex-doc-node codex-operator codex-function"><code class="codex-name">encoder-descriptors</code><code class="codex-lambda-list">(&amp;optional (format-filter :undefined) name-filter)</code><div class="codex-docstring">Get a list of encoder descriptors supported by libheif.</div></div>
+       <div class="codex-doc-node codex-operator codex-function"><code class="codex-name">encoder-descriptor-name</code><code class="codex-lambda-list">(descriptor)</code><div class="codex-docstring">Return a long, descriptive name of the encoder (including version
+information).</div></div>
+       <div class="codex-doc-node codex-operator codex-function"><code class="codex-name">encoder-descriptor-id-name</code><code class="codex-lambda-list">(descriptor)</code><div class="codex-docstring">Return a short, symbolic name for identifying the encoder. This
+name should stay constant over different encoder versions.</div></div>
+       <div class="codex-doc-node codex-operator codex-function"><code class="codex-name">encoder-descriptor-compression-format</code><code class="codex-lambda-list">(descriptor)</code><div class="codex-docstring">Get compression format for this encoder.</div></div>
+       <div class="codex-doc-node codex-operator codex-function"><code class="codex-name">encoder-descriptor-supports-lossy-compression-p</code><code class="codex-lambda-list">(descriptor)</code><div class="codex-docstring">Return <code>t</code> if this encoder supports lossy compression, <code>nil</code>
+oterwise.</div></div>
+       <div class="codex-doc-node codex-operator codex-function"><code class="codex-name">encoder-descriptor-supports-lossless-compression-p</code><code class="codex-lambda-list">(descriptor)</code><div class="codex-docstring">Return <code>t</code> if this encoder supports lossless compression, <code>nil</code>
+oterwise.</div></div>
+       <div class="codex-doc-node codex-variable"><code class="codex-name">+default-encoding-options+</code><div class="codex-docstring">Default encoding options</div></div>
+       <div class="codex-doc-node codex-type"><code class="codex-name">compression-format</code><code class="codex-type-def">(nil (quote (member :undefined :hevc :avc :jpeg :av1 :vvc :evc :jpeg2000 :uncompressed :mask :htj2k)))</code><div class="codex-docstring">A type which represents a compression format and is used in encoder
+selection.</div></div>
+       <div class="codex-doc-node codex-operator codex-macro"><code class="codex-name">with-encoder</code><code class="codex-lambda-list">((encoder context descriptor) &amp;body body)</code><div class="codex-docstring">Bind <code>encoder</code> to a reference to the encoder by its descriptor
+and execute <code>body</code> in its scope. Make sure it is released when the
+control leaves <code>body</code>.</div></div>
+       <div class="codex-doc-node codex-operator codex-macro"><code class="codex-name">with-encoder-for-format</code><code class="codex-lambda-list">((encoder context format) &amp;body body)</code><div class="codex-docstring">Bind <code>encoder</code> to an encoder for the specified format and execute
+<code>body</code> in its scope. Ensure that the encoder is released when the
+control leaves <code>body</code>.</div></div>
+       <div class="codex-doc-node codex-operator codex-function"><code class="codex-name">encoder-set-lossy-quality!</code><code class="codex-lambda-list">(encoder quality)</code><div class="codex-docstring">Set a 'quality' factor (0-100). How this is mapped to actual
+encoding parameters is encoder dependent.</div></div>
+       <div class="codex-doc-node codex-operator codex-function"><code class="codex-name">encoder-set-lossless!</code><code class="codex-lambda-list">(encoder enablep)</code><div class="codex-docstring">Enable or disable lossless encoding.</div></div>
+       <div class="codex-doc-node codex-operator codex-function"><code class="codex-name">context-encode-image!</code><code class="codex-lambda-list">(context image encoder options)</code><div class="codex-docstring">Compress the input image. The first compressed image becomes the
+primary image in that context.</div></div>
+     
+   <p>   </p><h1 id="decoding">Decoding</h1>
+     
+       <div class="codex-doc-node codex-variable"><code class="codex-name">+default-decoding-options+</code><div class="codex-docstring">Default decoding options</div></div>
+       <div class="codex-doc-node codex-operator codex-macro"><code class="codex-name">with-decode-image</code><code class="codex-lambda-list">((image handle colorspace chroma options) &amp;body body)</code><div class="codex-docstring">Bind <code>image</code> to a decoded image and execute <code>body</code> in the scope
+of that image. Make sure the image is released when the control leaves
+<code>body</code>.</div></div>
+     
+   <p>   </p><h1 id="0-metadata">Metadata</h1>
+     
+       <div class="codex-doc-node codex-record codex-defconstructor"><code class="codex-name">metadata-ref</code><div class="codex-docstring"></div><ul class="codex-slot-list"><li class="codex-slot codex-structure-slot"><code class="codex-name">size</code><div class="codex-class-struct-slot-option-node"><table class="codex-class-struct-slot-option-table"><tr class="codex-class-struct-slot-option-row"><td class="codex-class-struct-slot-option-label-cell">Type</td><td class="codex-class-struct-slot-option-value-cell codex-class-struct-slot-option-symbol-list-cell"><code class="codex-class-struct-slot-symbol-list">(unsigned-byte 64)</code></td></tr><tr class="codex-class-struct-slot-option-row"><td class="codex-class-struct-slot-option-label-cell">Reader</td><td class="codex-class-struct-slot-option-value-cell codex-class-struct-slot-option-symbol-list-cell"><code class="codex-class-struct-slot-symbol-list">cl-libheif:metadata-ref-size</code></td></tr></table></div></li><li class="codex-slot codex-structure-slot"><code class="codex-name">id</code><div class="codex-class-struct-slot-option-node"><table class="codex-class-struct-slot-option-table"><tr class="codex-class-struct-slot-option-row"><td class="codex-class-struct-slot-option-label-cell">Type</td><td class="codex-class-struct-slot-option-value-cell codex-class-struct-slot-option-symbol-list-cell"><code class="codex-class-struct-slot-symbol-list">(unsigned-byte 32)</code></td></tr><tr class="codex-class-struct-slot-option-row"><td class="codex-class-struct-slot-option-label-cell">Reader</td><td class="codex-class-struct-slot-option-value-cell codex-class-struct-slot-option-symbol-list-cell"><code class="codex-class-struct-slot-symbol-list">cl-libheif:metadata-ref-id</code></td></tr></table></div></li></ul></div>
+       <div class="codex-doc-node codex-operator codex-function"><code class="codex-name">image-handle-metadata-refs</code><code class="codex-lambda-list">(handle &amp;optional filter (max-ids 0))</code><div class="codex-docstring">Get a list of metadata blocks. If MAX-IDS is positive, return no
+more than MAX-IDS entries.</div></div>
+       <div class="codex-doc-node codex-operator codex-function"><code class="codex-name">image-handle-metadata</code><code class="codex-lambda-list">(handle ref)</code><div class="codex-docstring">Get a metadata block by its reference.</div></div>
+     
+   <p>
+</p>
+    </main>
+  </article>
+  <footer>
+    <div class="info">
+      Created with <a href="https://github.com/CommonDoc/codex">Codex</a>.
+    </div>
+  </footer>
+  <script>
+   HighlightLisp.highlight_auto();
+  </script>
+
+  </body>
+</html>

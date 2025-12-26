@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>
+  Examples &ndash; cl-libheif
+</title>
+    <link rel="stylesheet" href="static/style.css"/>
+    
+  <link rel="stylesheet" href="static/highlight.css"/>
+  <script src="static/highlight.js"></script>
+  <script src="static/load-mathjax.js" async></script>
+  <style>
+   /* Highlight the current top-level TOC item, and hide the TOC of all other items */
+
+   .toc a[data-node="examples"] {
+       color: #AD3108;
+   }
+
+   .toc ol {
+       display: none;
+   }
+
+   .toc > ol {
+       display: block;
+   }
+
+   .toc li a[data-node="examples"] + ol {
+       display: block;
+   }
+
+   .toc li a[data-node="examples"] + ol li {
+       font-size: 16px;
+       margin: 0 10px;
+   }
+
+   .toc li a[active] + ol li:first-child {
+       margin-top: 5px;
+   }
+  </style>
+
+  </head>
+  <body>
+    
+  <h1 class="doc-title">cl-libheif » Examples</h1>
+  <article id="article" data-section="examples">
+    <aside>
+      <ol class="toc"><li><a href="index.html" data-node="index">Overview</a></li><li><a href="naming-convention.html" data-node="naming-convention">Naming convention</a></li><li><a href="idiosyncrasies.html" data-node="idiosyncrasies">Idiosyncrasies</a></li><li><a href="examples.html" data-node="examples">Examples</a><ol><li><a href="examples.html#image-decoding" data-node="image-decoding">Image decoding</a></li><li><a href="examples.html#image-encoding" data-node="image-encoding">Image encoding</a></li><li><a href="examples.html#metadata" data-node="metadata">Metadata</a></li></ol></li><li><a href="api.html" data-node="api">API</a><ol><li><a href="conditions.html" data-node="conditions">Conditions</a></li><li><a href="libheif--(-de-)-initialization.html" data-node="libheif--(-de-)-initialization">libheif (de)initialization</a></li><li><a href="context.html" data-node="context">Context</a></li><li><a href="image-handles.html" data-node="image-handles">Image handles</a></li><li><a href="images.html" data-node="images">Images</a></li><li><a href="encoding.html" data-node="encoding">Encoding</a></li><li><a href="decoding.html" data-node="decoding">Decoding</a></li><li><a href="0-metadata.html" data-node="0-metadata">Metadata</a></li></ol></li></ol>
+    </aside>
+    <main class="codex-section">
+      <p>
+   <b>NB:</b> On some platforms (OSes / Lisp implementations) it's necessary to
+   mask floating point traps, otherwise the lisp would crash (I mean it). It can
+   be done in a portable way with <code>float-features:with-float-traps-masked</code>.
+   </p><h1 id="image-decoding">Image decoding</h1><p>
+     This function decodes an image (in color) from a file and returns an array
+     with 3 color components per pixel:
+     </p><pre><code class="lisp">(serapeum:-&gt; decode ((or pathname string))
+             (values (simple-array (unsigned-byte 8)(* * 3)) &amp;optional))
+(defun decode (name)
+  (with-libheif (+default-init-parameters+)
+    (with-context (ctx)
+      (context-read-from-file! ctx name)
+      (with-primary-image-handle (handle ctx)
+        (with-decode-image (image handle :rgb :interleaved-rgb +default-decoding-options+)
+          (image-plane-data image :interleaved))))))
+     </code></pre><p>     The same for a grayscale image:
+     </p><pre><code class="lisp">(serapeum:-&gt; decode ((or pathname string))
+             (values (simple-array (unsigned-byte 8)(* * 1)) &amp;optional))
+(defun decode (name)
+  (with-libheif (+default-init-parameters+)
+    (with-context (ctx)
+      (context-read-from-file! ctx name)
+      (with-primary-image-handle (handle ctx)
+        (with-decode-image (image handle :monochrome :monochrome +default-decoding-options+)
+          (image-plane-data image :y))))))
+     </code></pre><p>     The wrapper can also read from a stream:
+     </p><pre><code class="lisp">(serapeum:-&gt; decode (stream)
+             (values (simple-array (unsigned-byte 8)(* * 3)) &amp;optional))
+(defun decode (stream)
+  (with-libheif (+default-init-parameters+)
+    (with-context (ctx)
+      (with-stream-reader (reader stream)
+        (context-read-from-stream! ctx reader)
+        (with-primary-image-handle (handle ctx)
+          (with-decode-image (image handle :rgb :interleaved-rgb +default-decoding-options+)
+            (image-plane-data image :interleaved)))))))
+
+(with-open-file (input &quot;my-photo.heic&quot; :element-type '(unsigned-byte 8))
+  (decode input))
+     </code></pre><p>     You can obtain a preferred colorspace with
+     <code>image-handle-preferred-decoding-colorspace</code>.
+   </p><p>   </p><h1 id="image-encoding">Image encoding</h1>
+     Encode an image and write the result to a file.
+     <pre><code class="lisp">(serapeum:-&gt; encode ((simple-array (unsigned-byte 8)(* * 3))(or pathname string))
+             (values &amp;optional))
+(defun encode (data name)
+  (let ((height (array-dimension data 0))
+        (width  (array-dimension data 1)))
+    (with-libheif (+default-init-parameters+)
+      (with-context (ctx)
+        (with-image (image width height :rgb :interleaved-rgb)
+          (image-add-plane! image :interleaved width height 24)
+          (image-set-plane-data!  image :interleaved data)
+          (with-encoder-for-format (encoder ctx :hevc)
+            (encoder-set-lossy-quality! encoder 90)
+            (context-encode-image! ctx image encoder
+                                   +default-encoding-options+)
+            (context-write-to-file! ctx name)))))))
+     </code></pre>
+   <p>   </p><h1 id="metadata">Metadata</h1>
+     Read all metadata blocks in a list (each element is a simple array of
+     octets):
+     <pre><code class="lisp">(serapeum:-&gt; read-metadata ((or pathname string))
+             (values list &amp;optional))
+(defun read-metadata (name)
+  (with-libheif (+default-init-parameters+)
+    (with-context (ctx)
+      (context-read-from-file! ctx name)
+      (with-primary-image-handle (handle ctx)
+        (mapcar
+         (lambda (ref)
+           (image-handle-metadata handle ref))
+         (image-handle-metadata-refs handle))))))
+     </code></pre>
+   <p>
+</p>
+    </main>
+  </article>
+  <footer>
+    <div class="info">
+      Created with <a href="https://github.com/CommonDoc/codex">Codex</a>.
+    </div>
+  </footer>
+  <script>
+   HighlightLisp.highlight_auto();
+  </script>
+
+  </body>
+</html>
