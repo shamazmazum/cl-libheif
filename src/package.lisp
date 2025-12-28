@@ -45,6 +45,10 @@
    #:chroma
 
    ;; Decoder
+   #:decoder-descriptor
+   #:decoder-descriptors
+   #:decoder-descriptor-name
+   #:decoder-descriptor-id-name
    #:decoding-options
    #:+default-decoding-options+
    #:with-decode-image
