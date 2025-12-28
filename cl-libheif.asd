@@ -54,6 +54,7 @@
                  (:file "io")
                  (:file "image-handle")
                  (:file "image")
+                 (:file "options")
                  (:file "decoding")
                  (:file "encoding")
                  (:file "exif"))

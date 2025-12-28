@@ -37,12 +37,6 @@
    (decoder-descriptor-obj descriptor)))
 
 ;; Decoding
-(defwrapper decoding-options)
-
-(defparameter +default-decoding-options+
-  (decoding-options (null-pointer))
-  "Default decoding options")
-
 (defcfun (%decode-image "heif_decode_image") (:struct heif-error)
   (handle     :pointer)
   (image      :pointer)

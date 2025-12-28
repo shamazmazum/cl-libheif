@@ -16,11 +16,6 @@
 (defctype heif-boolean (:wrapper :int :from-c bool-c-to-lisp
                                  :to-c bool-lisp-to-c))
 
-(defwrapper encoding-options)
-(defparameter +default-encoding-options+
-  (encoding-options (null-pointer))
-  "Default encoding options")
-
 (defwrapper encoder)
 
 (defcfun (%get-encoder-for-format "heif_context_get_encoder_for_format")
