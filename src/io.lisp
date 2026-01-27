@@ -170,6 +170,8 @@ contexts) as you wish."
         (write-byte (mem-aref data :uint8 i)
                     *heif-io-stream*)))
 
+;; TODO: SBCL 2.6.1 can pass and accept structures by value, so there
+;; is no need in this wrapper anymore. Remove it in the future.
 (defcfun (%context-write "heif_wrapper_context_write") (:struct heif-error)
   (context  :pointer)
   (writer   :pointer))
