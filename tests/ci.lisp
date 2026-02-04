@@ -1,5 +1,8 @@
 (defun do-all()
-  (ql:quickload :cl-libheif/tests)
+  (handler-case
+      (asdf:load-system :cl-libheif/tests)
+    (error ()
+      (uiop:quit 1)))
   (uiop:quit
    (if (uiop:call-function "cl-libheif/tests:run-tests")
        0 1)))

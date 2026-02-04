@@ -78,3 +78,7 @@
                :cl-value-noise
                :float-features
                :flexi-streams))
+
+;; For qlot
+(defsystem :cl-libheif/docs
+  :depends-on (:cl-libheif :codex))
