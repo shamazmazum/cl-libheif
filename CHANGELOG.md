@@ -1,5 +1,12 @@
 # Changelog
 
+## Version 1.0.1
+
+* Improvement: Now cl-libheif can be built without the C wrapper
+  (`tinywrapper.so` library used to support writing HEIC files). This requires
+  libheif version >= 1.19.8 and x86-64 architecture. To enable this feature, add
+  `:cl-libheif-no-wrapper` to `*features*` before compiling cl-libheif.
+
 ## Version 1.0
 
 * Add functions to read from and write to a stream. Search the documentation for

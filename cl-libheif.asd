@@ -38,7 +38,7 @@
     :description "A wrapper around libheif"
     :maintainer "Vasily Postnicov <shamaz.mazum@gmail.com>"
     :licence "2-clause BSD"
-    :version "1.0"
+    :version "1.0.1"
     :depends-on (:cffi
                  :cffi-libffi
                  :serapeum
@@ -69,7 +69,7 @@
                                 (find-package :cl-libheif/tests))))))
 
 (defsystem :cl-libheif/tests
-  :version "1.0"
+  :version "1.0.1"
   :author "Vasily Postnicov <shamaz.mazum@gmail.com>"
   :licence "2-clause BSD"
   :pathname "tests"
