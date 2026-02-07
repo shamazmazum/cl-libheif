@@ -13,6 +13,7 @@
    #:init-parameters
    #:+default-init-parameters+
    #:with-libheif
+   #:libheif-version
 
    ;; Stream reader
    #:stream-reader

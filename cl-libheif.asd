@@ -42,7 +42,8 @@
     :depends-on (:cffi
                  :cffi-libffi
                  :serapeum
-                 :trivial-octet-streams)
+                 :trivial-octet-streams
+                 :split-sequence)
     :serial t
     :pathname "src"
     :components ((:file "package")

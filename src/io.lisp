@@ -204,6 +204,11 @@ contexts) as you wish."
     (userdata :pointer))
 
   (defun %context-write (context)
+    (unless (version>= 1 18 8)
+      (error #.(concatenate
+                'string
+                "Your libheif is too old, recompile cl-libheif without "
+                ":cl-libheif-no-wrapper feature")))
     (with-foreign-object (writer '(:struct heif-writer))
       (with-foreign-slots ((api-version write) writer (:struct heif-writer))
         (setf api-version 1 write (callback write-to-stream-callback))

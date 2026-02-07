@@ -53,3 +53,27 @@ when the control leaves @c(body)."
      (init ,parameters)
      (unwind-protect (progn ,@body)
        (deinit))))
+
+(defcfun (%libheif-version "heif_get_version") :string)
+
+(serapeum:-> libheif-version ()
+             (values string &optional))
+(defun libheif-version ()
+  (%libheif-version))
+
+(serapeum:-> version>= (&rest unsigned-byte)
+             (values boolean &optional))
+(defun version>= (&rest wanted-version)
+  (let ((version (mapcar #'parse-integer
+                         (split-sequence:split-sequence
+                          #\. (libheif-version)))))
+    (labels ((%go (x y)
+               (let ((%x (car x))
+                     (%y (car y)))
+                 (cond
+                   ((or (null %x)
+                        (null %y))
+                    (not y))
+                   ((> %x %y) t)
+                   ((= %x %y) (%go (cdr x) (cdr y)))))))
+      (%go version wanted-version))))
