@@ -163,27 +163,58 @@ contexts) as you wish."
     (analyse-error result))
   (values))
 
-(defcallback write-to-stream-callback :void
-    ((data     :pointer)
-     (size     :size))
-  (loop for i below size do
-        (write-byte (mem-aref data :uint8 i)
-                    *heif-io-stream*)))
-
 ;; TODO: SBCL 2.6.1 can pass and accept structures by value, so there
 ;; is no need in this wrapper anymore. Remove it in the future.
-(defcfun (%context-write "heif_wrapper_context_write") (:struct heif-error)
-  (context  :pointer)
-  (writer   :pointer))
+#-(and cl-libheif-no-wrapper x86-64)
+(progn
+  (defcallback write-to-stream-callback :void
+      ((data     :pointer)
+       (size     :size))
+    (loop for i below size do
+      (write-byte (mem-aref data :uint8 i)
+                  *heif-io-stream*)))
+
+  (defcfun (%%context-write "heif_wrapper_context_write") (:struct heif-error)
+    (context  :pointer)
+    (writer   :pointer))
+
+  (defun %context-write (context)
+    (%%context-write context (callback write-to-stream-callback))))
+
+#+(and cl-libheif-no-wrapper x86-64)
+(progn
+  (defcstruct heif-writer
+    (api-version :int)
+    (write       :pointer))
+
+  (defcallback write-to-stream-callback :int
+      ((ctx      :pointer)
+       (data     :pointer)
+       (size     :size)
+       (userdata :pointer))
+    (declare (ignore ctx userdata))
+    (loop for i below size do
+      (write-byte (mem-aref data :uint8 i)
+                  *heif-io-stream*))
+    0)
+
+  (defcfun (%%context-write "heif_context_write") (:struct heif-error)
+    (context  :pointer)
+    (writer   (:pointer (:struct heif-writer)))
+    (userdata :pointer))
+
+  (defun %context-write (context)
+    (with-foreign-object (writer '(:struct heif-writer))
+      (with-foreign-slots ((api-version write) writer (:struct heif-writer))
+        (setf api-version 1 write (callback write-to-stream-callback))
+        (%%context-write context writer (null-pointer))))))
 
 (serapeum:-> context-write-to-stream! (context t)
              (values &optional))
 (defun context-write-to-stream! (context stream)
   "Write context to a binary stream (element type must be @c((unsigned-byte 8)))."
   (let* ((*heif-io-stream* stream)
-         (result (%context-write
-                  (context-obj context)
-                  (callback write-to-stream-callback))))
+         (result (%context-write (context-obj context))))
     (analyse-error result))
   (values))
 

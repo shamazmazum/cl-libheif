@@ -46,7 +46,8 @@
     :serial t
     :pathname "src"
     :components ((:file "package")
-                 (:cwrapper "tiny-wrapper")
+                 (:cwrapper "tiny-wrapper"
+                  :if-feature (:not (:and :x86-64 :cl-libheif-no-wrapper)))
                  (:file "conditions")
                  (:file "library")
                  (:file "enums")

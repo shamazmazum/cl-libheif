@@ -5,21 +5,23 @@
   (t (:default "libheif")))
 (use-foreign-library libheif)
 
-(let ((pathname
-       (asdf:output-file
-        'asdf:compile-op
-        (asdf:find-component
-         :cl-libheif "tiny-wrapper"))))
-  (pushnew
-   (make-pathname
-    :directory (pathname-directory pathname))
-   cffi:*foreign-library-directories*
-   :test #'equalp))
+#-(and cl-libheif-no-wrapper x86-64)
+(progn
+  (let ((pathname
+          (asdf:output-file
+           'asdf:compile-op
+           (asdf:find-component
+            :cl-libheif "tiny-wrapper"))))
+    (pushnew
+     (make-pathname
+      :directory (pathname-directory pathname))
+     cffi:*foreign-library-directories*
+     :test #'equalp))
 
-(cffi:define-foreign-library tiny-wrapper
-  (:unix  (:or "tiny-wrapper.so"))
-  (t (:default "tiny-wrapper")))
-(cffi:use-foreign-library tiny-wrapper)
+  (cffi:define-foreign-library tiny-wrapper
+    (:unix  (:or "tiny-wrapper.so"))
+    (t (:default "tiny-wrapper")))
+  (cffi:use-foreign-library tiny-wrapper))
 
 (defmacro defwrapper (name)
   "Make a new type for a pointer"
