@@ -25,6 +25,8 @@ jobs:
           echo "${HOME}/.roswell/bin" >> $GITHUB_PATH
       - name: Build documentation
         run: |
+          cd $GITHUB_WORKSPACE
+          qlot install
           qlot exec ros -s codex -e '(codex:document :cl-libheif :skip-undocumented t)'
       - name: Deploy to GH pages
         uses: peaceiris/actions-gh-pages@v3
